@@ -6,7 +6,6 @@ public class World {
         Direction[] convertedArgs = convert(args);
         run(convertedArgs);
         System.out.println("Stop");
-
     }
 
     public static void run(Direction[] array) {
