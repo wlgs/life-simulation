@@ -16,11 +16,11 @@ public class Vector2d {
     }
 
     boolean precedes(Vector2d other) {
-        return other.x <= this.x && other.y <= this.y;
+        return this.x >= other.x && this.y >= other.y;
     }
 
     boolean follows(Vector2d other) {
-        return other.x >= this.x && other.y >= this.y;
+        return this.x <= other.x && this.y <= other.y;
     }
 
     Vector2d upperRight(Vector2d other) {
