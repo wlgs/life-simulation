@@ -13,11 +13,11 @@ public class Animal {
         return position.equals(this.position);
     }
 
-    MapDirection getDirection(){
+    MapDirection getDirection() {
         return this.direction;
     }
 
-    Vector2d getPosition(){
+    Vector2d getPosition() {
         return this.position;
     }
 
@@ -48,13 +48,14 @@ public class Animal {
                         movementChange = movementChange.add(new Vector2d(0, -1));
                         break;
                 }
-                if (opposite){
+                if (opposite) {
                     movementChange = movementChange.opposite();
                 }
                 Vector2d newPos = this.position.add(movementChange);
-                if (newPos.y >= 0 && newPos.y <= 4 && newPos.x >= 0 && newPos.x <= 4) {
+                Vector2d mapBorderTR = new Vector2d(4, 4);
+                Vector2d mapBorderBL = new Vector2d(0, 0);
+                if (newPos.precedes(mapBorderBL) && newPos.follows(mapBorderTR))
                     this.position = newPos;
-                }
                 break;
         }
 
