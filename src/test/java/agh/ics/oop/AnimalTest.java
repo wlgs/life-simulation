@@ -68,15 +68,78 @@ public class AnimalTest {
         animal.move(MoveDirection.BACKWARD);
 
         Assertions.assertEquals(new Vector2d(0, 4), animal.getPosition());
+
+        //heading east and animal is at (0,4) so now lets try to get to (0,0)
+
+        animal.move(MoveDirection.LEFT);
+        animal.move(MoveDirection.BACKWARD);
+        animal.move(MoveDirection.BACKWARD);
+        animal.move(MoveDirection.BACKWARD);
+        animal.move(MoveDirection.BACKWARD);
+
+        Assertions.assertEquals(new Vector2d(0, 0), animal.getPosition());
+
     }
 
     @Test
-    public void mapEscapeTest(){
+    public void mapEscapeTest() {
+        Animal animal = new Animal();
+        animal.move(MoveDirection.RIGHT);
 
+        //starting position is (2,2), heading east
+
+        //right border of the map
+        for (int i = 0; i < 20; i++)
+            animal.move(MoveDirection.FORWARD);
+        Assertions.assertEquals(new Vector2d(4, 2), animal.getPosition());
+
+
+        animal.move(MoveDirection.LEFT);
+
+        //heading north
+
+        //top border of the map
+        for (int i = 0; i < 20; i++)
+            animal.move(MoveDirection.FORWARD);
+        Assertions.assertEquals(new Vector2d(4, 4), animal.getPosition());
+
+        animal.move(MoveDirection.LEFT);
+
+        //left border of the map
+        for (int i = 0; i < 20; i++)
+            animal.move(MoveDirection.FORWARD);
+        Assertions.assertEquals(new Vector2d(0, 4), animal.getPosition());
+
+        animal.move(MoveDirection.LEFT);
+
+        //bottom border of the map
+        for (int i = 0; i < 20; i++)
+            animal.move(MoveDirection.FORWARD);
+        Assertions.assertEquals(new Vector2d(0, 0), animal.getPosition());
     }
 
     @Test
-    public void parserTest(){
+    public void parserTest() {
+        OptionsParser parser = new OptionsParser();
+
+        //entry test
+        String[] test_args = {"f", "INVALID", "forward", "INVALID"};
+        MoveDirection[] valid_output = {MoveDirection.FORWARD, null, MoveDirection.FORWARD, null};
+        Assertions.assertArrayEquals(valid_output, parser.parse(test_args));
+
+
+        // all movements check
+        String[] test_args2 = {"f", "b", "r", "l", "forward", "backward", "right", "left"};
+        MoveDirection[] valid_output2 = {MoveDirection.FORWARD, MoveDirection.BACKWARD, MoveDirection.RIGHT,
+                MoveDirection.LEFT, MoveDirection.FORWARD, MoveDirection.BACKWARD,
+                MoveDirection.RIGHT, MoveDirection.LEFT};
+        Assertions.assertArrayEquals(valid_output2, parser.parse(test_args2));
+
+        // all invalid check
+        String[] test_args3 = {"just", "random", "args"};
+        MoveDirection[] valid_output3 = {null, null, null};
+        Assertions.assertArrayEquals(valid_output3, parser.parse(test_args3));
+
 
     }
 }
