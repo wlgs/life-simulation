@@ -2,11 +2,27 @@ package agh.ics.oop;
 
 public class Animal {
     private MapDirection direction = MapDirection.NORTH;
-    private Vector2d position = new Vector2d(2, 2);
+    private Vector2d position;
+    private IWorldMap map;
 
+    Animal(){
+        this.position= new Vector2d(2, 2);
+    }
+    Animal(IWorldMap map){
+        this.map = map;
+    }
+    Animal(IWorldMap map, Vector2d initialPosition){
+        this.map = map;
+        this.position = initialPosition;
+    }
 
     public String toString() {
-        return "pozycja: " + position + ", kierunek: " + direction;
+        return switch(this.direction){
+            case NORTH -> "^";
+            case EAST -> ">";
+            case SOUTH -> "v";
+            case WEST -> "<";
+        };
     }
 
     boolean isAt(Vector2d position) {
@@ -20,6 +36,7 @@ public class Animal {
     Vector2d getPosition() {
         return this.position;
     }
+
 
     void move(MoveDirection direction) {
         boolean opposite = false;
@@ -43,9 +60,7 @@ public class Animal {
                 if (opposite)
                     movementChange = movementChange.opposite();
                 Vector2d newPos = this.position.add(movementChange);
-                Vector2d mapBorderTR = new Vector2d(4, 4); // there should be a map class hopefully soon
-                Vector2d mapBorderBL = new Vector2d(0, 0);
-                if (newPos.precedes(mapBorderBL) && newPos.follows(mapBorderTR))
+                if (map.canMoveTo(newPos))
                     this.position = newPos;
                 break;
         }
