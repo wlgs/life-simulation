@@ -3,11 +3,16 @@ package agh.ics.oop;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class AnimalTest {
+import java.util.Arrays;
+import java.util.List;
+
+public class AnimalIntegrationTest {
+
 
     @Test
     public void directionTest() {
-        Animal animal = new Animal();
+        RectangularMap testMap = new RectangularMap(5,5);
+        Animal animal = new Animal(testMap, new Vector2d(2,2));
         // starting direction is NORTH
         animal.move(MoveDirection.RIGHT);
         animal.move(MoveDirection.RIGHT);
@@ -36,7 +41,8 @@ public class AnimalTest {
 
     @Test
     public void movementTest() {
-        Animal animal = new Animal();
+        RectangularMap testMap = new RectangularMap(5,5);
+        Animal animal = new Animal(testMap, new Vector2d(2,2));
         // starting at 2,2
         animal.move(MoveDirection.FORWARD);
         animal.move(MoveDirection.FORWARD);
@@ -83,7 +89,8 @@ public class AnimalTest {
 
     @Test
     public void mapEscapeTest() {
-        Animal animal = new Animal();
+        RectangularMap testMap = new RectangularMap(5,5);
+        Animal animal = new Animal(testMap, new Vector2d(2,2));
         animal.move(MoveDirection.RIGHT);
 
         //starting position is (2,2), heading east
@@ -118,28 +125,32 @@ public class AnimalTest {
         Assertions.assertEquals(new Vector2d(0, 0), animal.getPosition());
     }
 
+
+
     @Test
-    public void parserTest() {
-        OptionsParser parser = new OptionsParser();
+    public void world1Test(){
+        String[] testArgs = {"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "f", "f", "f", "f", "f", "f"};
+        MoveDirection[] directions = new OptionsParser().parse(testArgs);
+        IWorldMap map = new RectangularMap(10, 5);
+        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
+        SimulationEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
 
-        //entry test
-        String[] test_args = {"f", "INVALID", "forward", "INVALID"};
-        MoveDirection[] valid_output = {MoveDirection.FORWARD, null, MoveDirection.FORWARD, null};
-        Assertions.assertArrayEquals(valid_output, parser.parse(test_args));
+        Assertions.assertEquals(engine.getAnimal(0).getPosition(), new Vector2d(2, 0));
+        Assertions.assertEquals(engine.getAnimal(1).getPosition(), new Vector2d(3, 4));
 
+    }
 
-        // all movements check
-        String[] test_args2 = {"f", "b", "r", "l", "forward", "backward", "right", "left"};
-        MoveDirection[] valid_output2 = {MoveDirection.FORWARD, MoveDirection.BACKWARD, MoveDirection.RIGHT,
-                MoveDirection.LEFT, MoveDirection.FORWARD, MoveDirection.BACKWARD,
-                MoveDirection.RIGHT, MoveDirection.LEFT};
-        Assertions.assertArrayEquals(valid_output2, parser.parse(test_args2));
+    @Test
+    public void world2Test(){
+        String[] testArgs = {"f", "r", "r", "f", "f", "f", "f", "f", "f", "l", "l", "l", "f", "f"};
+        MoveDirection[] directions = new OptionsParser().parse(testArgs);
+        IWorldMap map = new RectangularMap(10, 5);
+        Vector2d[] positions = { new Vector2d(0,0), new Vector2d(0,1) };
+        SimulationEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
 
-        // all invalid check
-        String[] test_args3 = {"just", "random", "args"};
-        MoveDirection[] valid_output3 = {null, null, null};
-        Assertions.assertArrayEquals(valid_output3, parser.parse(test_args3));
-
-
+        Assertions.assertEquals(engine.getAnimal(0).getPosition(), new Vector2d(3, 0));
+        Assertions.assertEquals(engine.getAnimal(1).getPosition(), new Vector2d(2, 1));
     }
 }

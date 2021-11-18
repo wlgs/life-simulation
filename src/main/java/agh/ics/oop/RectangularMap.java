@@ -1,31 +1,30 @@
 package agh.ics.oop;
 
-import jdk.incubator.vector.VectorOperators;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class RectangularMap implements IWorldMap {
     private final Vector2d mapBorderTR;
     private final Vector2d mapBorderBL;
-    IWorldMap map;
-    List<Animal> animals = new ArrayList<>();
+    private final MapVisualizer visualizer;
+    private final List<Animal> animals;
 
 
-    RectangularMap(int width, int height) {
-        this.mapBorderTR = new Vector2d(width,height);
-        this.mapBorderBL = new Vector2d(0,0);
+    public RectangularMap(int width, int height) {
+        this.mapBorderTR = new Vector2d(width - 1, height - 1);
+        this.mapBorderBL = new Vector2d(0, 0);
+        this.visualizer = new MapVisualizer(this);
+        this.animals = new ArrayList<>();
     }
 
     @Override
-    public String toString(){
-        MapVisualizer visualizer = new MapVisualizer(this.map);
-        return "";
+    public String toString() {
+        return visualizer.draw(mapBorderBL, mapBorderTR);
     }
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return position.precedes(mapBorderBL) && position.follows(mapBorderTR);
+        return position.precedes(mapBorderBL) && position.follows(mapBorderTR) && !isOccupied(position);
     }
 
     @Override
@@ -48,6 +47,11 @@ public class RectangularMap implements IWorldMap {
 
     @Override
     public Object objectAt(Vector2d position) {
+        for (Animal animal : animals) {
+            if (animal.isAt(position)) {
+                return animal;
+            }
+        }
         return null;
     }
 }

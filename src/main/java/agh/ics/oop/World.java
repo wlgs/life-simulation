@@ -1,10 +1,12 @@
 package agh.ics.oop;
 
+import java.util.Arrays;
+
 public class World {
     public static void main(String[] args) {
         MoveDirection[] directions = new OptionsParser().parse(args);
         IWorldMap map = new RectangularMap(10, 5);
-        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
+        Vector2d[] positions = {new Vector2d(2, 2), new Vector2d(3, 4)};
         IEngine engine = new SimulationEngine(directions, map, positions);
         engine.run();
     }
@@ -21,16 +23,16 @@ public class World {
             }
         }
     }
-    public static Direction[] convert(String[] array){
+
+    public static Direction[] convert(String[] array) {
         Direction[] result = new Direction[array.length];
-        for(int i = 0; i< array.length; i++){
-            switch(array[i]){
+        for (int i = 0; i < array.length; i++) {
+            switch (array[i]) {
                 case "f" -> result[i] = Direction.FORWARD;
                 case "b" -> result[i] = Direction.BACKWARD;
                 case "r" -> result[i] = Direction.RIGHT;
                 case "l" -> result[i] = Direction.LEFT;
-                default -> { result[i] = Direction.UNKNOWN;
-                }
+                default -> result[i] = Direction.UNKNOWN;
             }
         }
         return result;

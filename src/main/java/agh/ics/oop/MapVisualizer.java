@@ -14,7 +14,8 @@ public class MapVisualizer {
 
     /**
      * Initializes the MapVisualizer with an instance of map to visualize.
-     * @param map
+     *
+     * @param map The map
      */
     public MapVisualizer(IWorldMap map) {
         this.map = map;
@@ -70,7 +71,7 @@ public class MapVisualizer {
     }
 
     private String drawObject(Vector2d currentPosition) {
-        String result = null;
+        String result;
         if (this.map.isOccupied(currentPosition)) {
             Object object = this.map.objectAt(currentPosition);
             if (object != null) {
