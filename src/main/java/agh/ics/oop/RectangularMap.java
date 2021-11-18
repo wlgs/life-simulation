@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RectangularMap implements IWorldMap {
+
     private final Vector2d mapBorderTR;
     private final Vector2d mapBorderBL;
     private final MapVisualizer visualizer;
