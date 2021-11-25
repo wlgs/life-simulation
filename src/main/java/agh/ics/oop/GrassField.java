@@ -1,0 +1,106 @@
+package agh.ics.oop;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class GrassField extends AbstractWorldMap {
+    private final List<Grass> grasses;
+    private final int amount;
+    private final int maxSpawnRange;
+    private final int minSpawnRange;
+
+
+    public GrassField(int amount) {
+        super(Integer.MAX_VALUE - 1, Integer.MAX_VALUE - 1, Integer.MIN_VALUE + 1, Integer.MIN_VALUE + 1);
+        this.amount = amount;
+        this.maxSpawnRange = (int) Math.sqrt(amount * 10);
+        this.minSpawnRange = 0;
+        grasses = new ArrayList<>();
+        for (int i = 0; i < amount; i++) {
+            while (true) {
+                if (spawnGrassRandomly())
+                    break;
+            }
+        }
+    }
+
+    public boolean isOccupied(Vector2d position) {
+        if (super.isOccupied(position))
+            return true;
+        for (Grass grass : grasses) {
+            if (position.equals(grass.getPosition()))
+                return true;
+        }
+        return false;
+    }
+
+    public Object objectAt(Vector2d position) {
+        if (super.objectAt(position) != null) {
+            return super.objectAt(position);
+        }
+        for (Grass grass : grasses) {
+            if (grass.isAt(position))
+                return grass;
+        }
+        return null;
+    }
+
+    public boolean canMoveTo(Vector2d position) {
+        if (position.precedes(mapBorderBL) &&
+                position.follows(mapBorderTR) &&
+                !(objectAt(position) instanceof Animal)) {
+            //animal can move to desired coords
+            //now lets check if the move is gonna happen on grass
+            Object checkedPos = objectAt(position);
+            if (checkedPos instanceof Grass) {
+                // the coord is grass so now we want to remove it
+                System.out.println("stepped in, generating");
+                grasses.remove(checkedPos);
+                spawnGrassRandomly();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean spawnGrassRandomly() {
+        int randomX = (int) (Math.random() * maxSpawnRange) + minSpawnRange;
+        int randomY = (int) (Math.random() * maxSpawnRange) + minSpawnRange;
+        Vector2d randomPos = new Vector2d(randomX, randomY);
+        if (objectAt(randomPos) == null) {
+            grasses.add(new Grass(randomPos));
+            return true;
+        }
+        return false;
+    }
+
+    public boolean spawnGrassAt(Vector2d position) {
+        if (objectAt(position) == null) {
+            grasses.add(new Grass(position));
+            return true;
+        }
+        return false;
+    }
+
+    public Vector2d getDrawLowerLeft() {
+        Vector2d drawLowerLeft = mapBorderTR;
+        for (Animal animal : animals) {
+            drawLowerLeft = drawLowerLeft.lowerLeft(animal.getPosition());
+        }
+        for (Grass grass : grasses) {
+            drawLowerLeft = drawLowerLeft.lowerLeft(grass.getPosition());
+        }
+        return drawLowerLeft;
+    }
+
+    public Vector2d getDrawUpperRight() {
+        Vector2d drawUpperRight = mapBorderBL;
+        for (Animal animal : animals) {
+            drawUpperRight = drawUpperRight.upperRight(animal.getPosition());
+        }
+        for (Grass grass : grasses) {
+            drawUpperRight = drawUpperRight.upperRight(grass.getPosition());
+        }
+        return drawUpperRight;
+    }
+}
