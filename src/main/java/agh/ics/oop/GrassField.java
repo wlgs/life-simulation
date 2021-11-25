@@ -17,10 +17,9 @@ public class GrassField extends AbstractWorldMap {
         this.minSpawnRange = 0;
         grasses = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
-            while (true) {
+            while (true)
                 if (spawnGrassRandomly())
                     break;
-            }
         }
     }
 
@@ -46,17 +45,19 @@ public class GrassField extends AbstractWorldMap {
     }
 
     public boolean canMoveTo(Vector2d position) {
+        Object objMovingTo = objectAt(position);
         if (position.precedes(mapBorderBL) &&
                 position.follows(mapBorderTR) &&
-                !(objectAt(position) instanceof Animal)) {
+                !(objMovingTo instanceof Animal)) {
             //animal can move to desired coords
-            //now lets check if the move is gonna happen on grass
-            Object checkedPos = objectAt(position);
-            if (checkedPos instanceof Grass) {
-                // the coord is grass so now we want to remove it
-                System.out.println("stepped in, generating");
-                grasses.remove(checkedPos);
-                spawnGrassRandomly();
+            //now lets check if the move is going to happen on grass
+            if (objMovingTo instanceof Grass) {
+                // we would want to remove the grass, but first let us spawn another one explanation down below
+                // try spawning the grass until it succeeds
+                while (true)
+                    if(spawnGrassRandomly())
+                        break;
+                grasses.remove(objMovingTo); // we delete after just to make sure the grass doesn't reappear
             }
             return true;
         }
