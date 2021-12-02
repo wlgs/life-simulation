@@ -41,7 +41,7 @@ public class AnimalIntegrationTest {
 
     @Test
     public void movementTest() {
-        RectangularMap testMap = new RectangularMap(5, 5);
+        IWorldMap testMap = new RectangularMap(5, 5);
         Animal animal = new Animal(testMap, new Vector2d(2, 2));
         // starting at 2,2
         animal.move(MoveDirection.FORWARD);
@@ -135,21 +135,63 @@ public class AnimalIntegrationTest {
         SimulationEngine engine = new SimulationEngine(directions, map, positions);
         engine.run();
 
-        Assertions.assertEquals(engine.getAnimal(0).getPosition(), new Vector2d(2, 0));
-        Assertions.assertEquals(engine.getAnimal(1).getPosition(), new Vector2d(3, 4));
+        Assertions.assertEquals(new Vector2d(2, 0), engine.getAnimal(0).getPosition());
+        Assertions.assertEquals(new Vector2d(3, 4), engine.getAnimal(1).getPosition());
 
     }
 
     @Test
     public void world2Test() {
-        String[] testArgs = {"f", "r", "r", "f", "f", "f", "f", "f", "f", "l", "l", "l", "f", "f"};
+        String[] testArgs = {"r", "b", "b"};
+        MoveDirection[] directions = new OptionsParser().parse(testArgs);
+        IWorldMap map = new RectangularMap(10, 5);
+        Vector2d[] positions = {new Vector2d(3, 0), new Vector2d(2, 1)};
+        SimulationEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
+        System.out.println(engine.getAnimal(0).getPosition());
+        System.out.println(engine.getAnimal(1).getPosition());
+        Assertions.assertEquals(new Vector2d(3, 0), engine.getAnimal(0).getPosition());
+        Assertions.assertEquals(new Vector2d(2, 0), engine.getAnimal(1).getPosition());
+    }
+
+    @Test
+    public void world3Test() {
+
+        String[] testArgs = {"f", "r", "f", "r", "f", "r"};
         MoveDirection[] directions = new OptionsParser().parse(testArgs);
         IWorldMap map = new RectangularMap(10, 5);
         Vector2d[] positions = {new Vector2d(0, 0), new Vector2d(0, 1)};
         SimulationEngine engine = new SimulationEngine(directions, map, positions);
         engine.run();
+        Assertions.assertEquals(new Vector2d(0, 0), engine.getAnimal(0).getPosition());
+        Assertions.assertEquals(new Vector2d(0, 1), engine.getAnimal(1).getPosition());
+    }
 
-        Assertions.assertEquals(engine.getAnimal(0).getPosition(), new Vector2d(3, 0));
-        Assertions.assertEquals(engine.getAnimal(1).getPosition(), new Vector2d(2, 1));
+    @Test
+    public void world4Test() {
+        String[] testArgs = {"b", "r", "b"};
+        MoveDirection[] directions = new OptionsParser().parse(testArgs);
+        IWorldMap map = new RectangularMap(10, 5);
+        Vector2d[] positions = {new Vector2d(3, 1), new Vector2d(3, 0)};
+        SimulationEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
+        System.out.println(engine.getAnimal(0).getPosition());
+        System.out.println(engine.getAnimal(1).getPosition());
+        Assertions.assertEquals(new Vector2d(3, 1), engine.getAnimal(0).getPosition());
+        Assertions.assertEquals(new Vector2d(3, 0), engine.getAnimal(1).getPosition());
+    }
+
+    @Test
+    public void world5Test() {
+        String[] testArgs = {"f", "b", "f", "r", "b", "r", "b", "r", "b"};
+        MoveDirection[] directions = new OptionsParser().parse(testArgs);
+        IWorldMap map = new RectangularMap(10, 5);
+        Vector2d[] positions = {new Vector2d(3, 1), new Vector2d(3, 0)};
+        SimulationEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
+        System.out.println(engine.getAnimal(0).getPosition());
+        System.out.println(engine.getAnimal(1).getPosition());
+        Assertions.assertEquals(new Vector2d(3, 1), engine.getAnimal(0).getPosition());
+        Assertions.assertEquals(new Vector2d(3, 0), engine.getAnimal(1).getPosition());
     }
 }

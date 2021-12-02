@@ -55,7 +55,7 @@ public class GrassField extends AbstractWorldMap {
                 // we would want to remove the grass, but first let us spawn another one explanation down below
                 // try spawning the grass until it succeeds
                 while (true)
-                    if(spawnGrassRandomly())
+                    if (spawnGrassRandomly())
                         break;
                 grasses.remove(objMovingTo); // we delete after just to make sure the grass doesn't reappear
             }
@@ -85,8 +85,8 @@ public class GrassField extends AbstractWorldMap {
 
     public Vector2d getDrawLowerLeft() {
         Vector2d drawLowerLeft = mapBorderTR;
-        for (Animal animal : animals) {
-            drawLowerLeft = drawLowerLeft.lowerLeft(animal.getPosition());
+        for (Vector2d pos : animals.keySet()) {
+            drawLowerLeft = drawLowerLeft.lowerLeft(pos);
         }
         for (Grass grass : grasses) {
             drawLowerLeft = drawLowerLeft.lowerLeft(grass.getPosition());
@@ -96,8 +96,8 @@ public class GrassField extends AbstractWorldMap {
 
     public Vector2d getDrawUpperRight() {
         Vector2d drawUpperRight = mapBorderBL;
-        for (Animal animal : animals) {
-            drawUpperRight = drawUpperRight.upperRight(animal.getPosition());
+        for (Vector2d pos : animals.keySet()) {
+            drawUpperRight = drawUpperRight.upperRight(pos);
         }
         for (Grass grass : grasses) {
             drawUpperRight = drawUpperRight.upperRight(grass.getPosition());

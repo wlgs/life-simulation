@@ -14,6 +14,8 @@ public class GrassFieldTest {
         Assertions.assertTrue(map.canMoveTo(new Vector2d(1, 2)));
         Assertions.assertTrue(map.canMoveTo(new Vector2d(1, 2)));
         Assertions.assertTrue(map.canMoveTo(new Vector2d(Integer.MAX_VALUE - 1, Integer.MAX_VALUE - 1)));
+        map.place(new Animal(map, new Vector2d(3, 3)));
+        Assertions.assertFalse(map.canMoveTo(new Vector2d(3, 3)));
     }
 
     @Test
