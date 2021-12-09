@@ -22,7 +22,7 @@ public class Animal extends AbstractWorldMapElement {
         };
     }
 
-    MapDirection getDirection() {
+    public MapDirection getDirection() {
         return this.direction;
     }
 
@@ -53,5 +53,15 @@ public class Animal extends AbstractWorldMapElement {
         for (IPositionChangeObserver observer : observers)
             observer.positionChanged(this.position, newPos);
         this.position = newPos;
+    }
+
+    @Override
+    public String getFileName() {
+        return switch (this.direction) {
+            case NORTH -> "up.png";
+            case EAST -> "right.png";
+            case SOUTH -> "down.png";
+            case WEST -> "left.png";
+        };
     }
 }
