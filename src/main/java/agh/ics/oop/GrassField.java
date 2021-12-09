@@ -8,7 +8,7 @@ public class GrassField extends AbstractWorldMap {
     private final int amount;
     private final int maxSpawnRange;
     private final int minSpawnRange;
-    private MapBoundary mapBorder = new MapBoundary();
+
 
     public GrassField(int amount) {
         super(Integer.MAX_VALUE - 1, Integer.MAX_VALUE - 1, Integer.MIN_VALUE + 1, Integer.MIN_VALUE + 1);
@@ -57,7 +57,9 @@ public class GrassField extends AbstractWorldMap {
                 while (true)
                     if (spawnGrassRandomly())
                         break;
-                grasses.remove(objMovingTo); // we delete after just to make sure the grass doesn't reappear
+                Grass grassToRemove = (Grass) objMovingTo; // we delete after just to make sure the grass doesn't reappear
+                grasses.remove(grassToRemove);
+                mapBorder.removeElement(grassToRemove.getPosition());
             }
             return true;
         }
@@ -69,7 +71,10 @@ public class GrassField extends AbstractWorldMap {
         int randomY = (int) (Math.random() * maxSpawnRange) + minSpawnRange;
         Vector2d randomPos = new Vector2d(randomX, randomY);
         if (objectAt(randomPos) == null) {
-            grasses.add(new Grass(randomPos));
+            Grass grassToAdd = new Grass(randomPos);
+            grasses.add(grassToAdd);
+            grassToAdd.addObserver(this.mapBorder);
+            mapBorder.addElement(grassToAdd.getPosition());
             return true;
         }
         return false;
@@ -77,31 +82,40 @@ public class GrassField extends AbstractWorldMap {
 
     public boolean spawnGrassAt(Vector2d position) {
         if (objectAt(position) == null) {
-            grasses.add(new Grass(position));
+            Grass grassToAdd = new Grass(position);
+            grasses.add(grassToAdd);
+            grassToAdd.addObserver(this.mapBorder);
+            mapBorder.addElement(grassToAdd.getPosition());
             return true;
         }
         return false;
     }
 
-    public Vector2d getDrawLowerLeft() {
-        Vector2d drawLowerLeft = mapBorderTR;
-        for (Vector2d pos : animals.keySet()) {
-            drawLowerLeft = drawLowerLeft.lowerLeft(pos);
-        }
-        for (Grass grass : grasses) {
-            drawLowerLeft = drawLowerLeft.lowerLeft(grass.getPosition());
-        }
-        return drawLowerLeft;
+    public Vector2d getDrawLowerLeft(){
+        return mapBorder.getLowerLeft();
     }
 
-    public Vector2d getDrawUpperRight() {
-        Vector2d drawUpperRight = mapBorderBL;
-        for (Vector2d pos : animals.keySet()) {
-            drawUpperRight = drawUpperRight.upperRight(pos);
-        }
-        for (Grass grass : grasses) {
-            drawUpperRight = drawUpperRight.upperRight(grass.getPosition());
-        }
-        return drawUpperRight;
+    public Vector2d getDrawUpperRight(){
+        return mapBorder.getUpperRight();
     }
+//    public Vector2d getDrawLowerLeft() {
+//        Vector2d drawLowerLeft = mapBorderTR;
+//        for (Vector2d pos : animals.keySet()) {
+//            drawLowerLeft = drawLowerLeft.lowerLeft(pos);
+//        }
+//        for (Grass grass : grasses) {
+//            drawLowerLeft = drawLowerLeft.lowerLeft(grass.getPosition());
+//        }
+//        return drawLowerLeft;
+//    }
+//    public Vector2d getDrawUpperRight() {
+//        Vector2d drawUpperRight = mapBorderBL;
+//        for (Vector2d pos : animals.keySet()) {
+//            drawUpperRight = drawUpperRight.upperRight(pos);
+//        }
+//        for (Grass grass : grasses) {
+//            drawUpperRight = drawUpperRight.upperRight(grass.getPosition());
+//        }
+//        return drawUpperRight;
+//    }
 }

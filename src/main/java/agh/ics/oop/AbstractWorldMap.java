@@ -8,6 +8,7 @@ abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
     protected MapVisualizer visualizer = new MapVisualizer(this);
     protected Vector2d mapBorderTR;
     protected Vector2d mapBorderBL;
+    protected MapBoundary mapBorder = new MapBoundary();
 
 
     public AbstractWorldMap(int TRW, int TRH, int BLW, int BLH) {
@@ -38,6 +39,8 @@ abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
         if (canMoveTo(animal.getPosition())) {
             animals.put(animal.getPosition(), animal);
             animal.addObserver(this);
+            animal.addObserver(mapBorder);
+            mapBorder.addElement(animal.getPosition());
             return true;
         }
         throw new IllegalArgumentException(animal.getPosition() + " is not a valid position to place to");
