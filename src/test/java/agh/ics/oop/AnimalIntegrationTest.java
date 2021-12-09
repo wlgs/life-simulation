@@ -124,8 +124,6 @@ public class AnimalIntegrationTest {
             animal.move(MoveDirection.FORWARD);
         Assertions.assertEquals(new Vector2d(0, 0), animal.getPosition());
     }
-
-
     @Test
     public void world1Test() {
         String[] testArgs = {"f", "b", "r", "l", "f", "f", "r", "r", "f", "f", "f", "f", "f", "f", "f", "f"};

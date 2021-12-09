@@ -15,6 +15,7 @@ abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
         this.mapBorderBL = new Vector2d(BLW, BLH);
     }
 
+    @Override
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
         Animal animal = this.animals.get(oldPosition);
         this.animals.remove(oldPosition);
@@ -39,7 +40,7 @@ abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
             animal.addObserver(this);
             return true;
         }
-        return false;
+        throw new IllegalArgumentException(animal.getPosition() + " is not a valid position to place to");
     }
 
     public boolean isOccupied(Vector2d position) {

@@ -22,9 +22,20 @@ public class GrassFieldTest {
     public void placeTest() {
         GrassField map = new GrassField(10);
         Assertions.assertTrue(map.place(new Animal(map, new Vector2d(-1, -1))), "Negative coords");
-        Assertions.assertFalse(map.place(new Animal(map, new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE))), "Can't place at borders square");
+        try{
+            map.place(new Animal(map, new Vector2d(Integer.MAX_VALUE, Integer.MAX_VALUE)));
+            Assertions.fail("Can't place at borders");
+        }catch(IllegalArgumentException ex){
+            Assertions.assertTrue(true);
+        }
+
         Assertions.assertTrue(map.place(new Animal(map, new Vector2d(3, 1))), "Can place at 3,1");
-        Assertions.assertFalse(map.place(new Animal(map, new Vector2d(3, 1))), "Cant place again at 3,1");
+        try{
+            map.place(new Animal(map, new Vector2d(3, 1)));
+            Assertions.fail("Can't place again at 3,1");
+        }catch(IllegalArgumentException ex){
+            Assertions.assertTrue(true);
+        }
     }
 
     @Test

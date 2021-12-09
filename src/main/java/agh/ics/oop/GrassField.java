@@ -8,7 +8,7 @@ public class GrassField extends AbstractWorldMap {
     private final int amount;
     private final int maxSpawnRange;
     private final int minSpawnRange;
-
+    private MapBoundary mapBorder = new MapBoundary();
 
     public GrassField(int amount) {
         super(Integer.MAX_VALUE - 1, Integer.MAX_VALUE - 1, Integer.MIN_VALUE + 1, Integer.MIN_VALUE + 1);

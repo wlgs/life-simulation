@@ -4,12 +4,17 @@ import java.util.Arrays;
 
 public class World {
     public static void main(String[] args) {
-        MoveDirection[] directions = new OptionsParser().parse(args);
-        IWorldMap map = new GrassField(10);
-        Vector2d[] positions = {new Vector2d(-1, -2)};
-        IEngine engine = new SimulationEngine(directions, map, positions);
-        engine.run();
-        System.out.println(map);
+        try{
+            MoveDirection[] directions = new OptionsParser().parse(args);
+            IWorldMap map = new GrassField(10);
+            Vector2d[] positions = {new Vector2d(-1, -2)};
+            IEngine engine = new SimulationEngine(directions, map, positions);
+            engine.run();
+            System.out.println(map);
+        }
+        catch (IllegalArgumentException ex){
+            System.out.println("Caught an exception:" + ex);
+        }
     }
 
     public static void run(Direction[] array) {

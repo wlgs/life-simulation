@@ -57,7 +57,6 @@ public class Animal extends AbstractWorldMapElement {
     void removeObserver(IPositionChangeObserver observer) {
         this.observers.remove(observer);
     }
-
     void positionChanged(Vector2d newPos) {
         for (IPositionChangeObserver observer : observers)
             observer.positionChanged(this.position, newPos);
