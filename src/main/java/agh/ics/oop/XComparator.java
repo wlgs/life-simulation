@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 public class XComparator implements Comparator<Vector2d> {
 
-    private boolean compareByX = false;
+    private final boolean compareByX;
 
     public XComparator(boolean compX){
        this.compareByX = compX;

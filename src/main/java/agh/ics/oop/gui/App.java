@@ -17,10 +17,9 @@ public class App extends Application {
 
 
     private AbstractWorldMap map;
-    private SimulationEngine engine;
     private GridPane mapGrid;
 
-    public void init() throws Exception {
+    public void init() {
         String[] args = getParameters().getRaw().toArray(new String[0]);
         MoveDirection[] directions = new OptionsParser().parse(args);
         this.map = new GrassField(10);
