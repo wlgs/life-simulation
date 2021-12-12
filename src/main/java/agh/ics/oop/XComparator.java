@@ -6,13 +6,14 @@ public class XComparator implements Comparator<Vector2d> {
 
     private final boolean compareByX;
 
-    public XComparator(boolean compX){
-       this.compareByX = compX;
+    public XComparator(boolean compX) {
+        this.compareByX = compX;
     }
+
     @Override
-    public int compare(Vector2d v1, Vector2d v2){
-        if (compareByX){
-            if (v1.x< v2.x)
+    public int compare(Vector2d v1, Vector2d v2) {
+        if (compareByX) {
+            if (v1.x < v2.x)
                 return -1;
             else if (v1.x > v2.x)
                 return 1;
@@ -20,9 +21,8 @@ public class XComparator implements Comparator<Vector2d> {
                 return -1;
             else if (v1.y > v2.y)
                 return 1;
-        }
-        else{
-            if (v1.y< v2.y)
+        } else {
+            if (v1.y < v2.y)
                 return -1;
             else if (v1.y > v2.y)
                 return 1;

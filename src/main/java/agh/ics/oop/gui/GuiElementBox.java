@@ -21,20 +21,21 @@ public class GuiElementBox {
     Image imageGrass = null;
 
 
-    public GuiElementBox() throws FileNotFoundException{
-        try{
+    public GuiElementBox() throws FileNotFoundException {
+        try {
             this.imageUp = new Image(new FileInputStream("src/main/resources/up.png"));
             this.imageDown = new Image(new FileInputStream("src/main/resources/down.png"));
             this.imageRight = new Image(new FileInputStream("src/main/resources/right.png"));
             this.imageLeft = new Image(new FileInputStream("src/main/resources/left.png"));
             this.imageGrass = new Image(new FileInputStream("src/main/resources/grass.png"));
 
-        } catch (FileNotFoundException ex){
+        } catch (FileNotFoundException ex) {
             System.out.println("Couldn't load files -> " + ex);
         }
 
     }
-    public VBox mapElementView(IMapElement mapElement)  {
+
+    public VBox mapElementView(IMapElement mapElement) {
         Label elementLabel;
         ImageView elementView;
         if (mapElement instanceof Animal) {
@@ -45,8 +46,7 @@ public class GuiElementBox {
                 case WEST -> new ImageView(imageLeft);
                 case SOUTH -> new ImageView(imageDown);
             };
-        }
-        else{
+        } else {
             elementLabel = new Label("Trawa");
             elementView = new ImageView(imageGrass);
         }
