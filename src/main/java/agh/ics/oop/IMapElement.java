@@ -1,4 +1,5 @@
 package agh.ics.oop;
+
 /**
  * The interface responsible for elements created on map.
  * Assumes that Vector2d is defined.
@@ -17,7 +18,6 @@ public interface IMapElement {
 
     /**
      * Retrieves the position of an element.
-     *
      *
      * @return Vector2d object of position of the element.
      */

@@ -18,21 +18,21 @@ public class MapBoundary implements IPositionChangeObserver {
         addElement(newPosition);
     }
 
-    public void addElement(Vector2d element){
+    public void addElement(Vector2d element) {
         sortedSetX.add(element);
         sortedSetY.add(element);
     }
 
-    public void removeElement(Vector2d element){
+    public void removeElement(Vector2d element) {
         sortedSetY.remove(element);
         sortedSetX.remove(element);
     }
 
-    public Vector2d getLowerLeft(){
-        return new Vector2d(sortedSetX.first().x,sortedSetY.first().y);
+    public Vector2d getLowerLeft() {
+        return new Vector2d(sortedSetX.first().x, sortedSetY.first().y);
     }
 
-    public Vector2d getUpperRight(){
+    public Vector2d getUpperRight() {
         return new Vector2d(sortedSetX.last().x, sortedSetY.last().y);
     }
 
