@@ -31,7 +31,7 @@ public class App extends Application implements IAnimalObserver {
 
     public void init() {
         this.map = new GrassField(10);
-        Vector2d[] positions = {new Vector2d(0, 0)};
+        Vector2d[] positions = {new Vector2d(0, 0),new Vector2d(5, 5),new Vector2d(3, 3)};
         this.engine = new SimulationEngine(map, positions);
         this.engine.addObserver(this);
         engine.setMoveDelay(300);
@@ -40,7 +40,6 @@ public class App extends Application implements IAnimalObserver {
 
     private void drawMap(boolean redraw) {
         mapGrid.setGridLinesVisible(false);
-        mapGrid.setGridLinesVisible(true);
         Label yx = new Label("y/x");
         yx.setFont(new Font(16));
         mapGrid.add(yx, 0, 0);
@@ -67,11 +66,9 @@ public class App extends Application implements IAnimalObserver {
             for (int i = 0; i <= map.getDrawUpperRight().x - map.getDrawLowerLeft().x; i++) {
                 for (int j = 0; j <= map.getDrawUpperRight().y - map.getDrawLowerLeft().y; j++) {
                     Vector2d curMapPos = new Vector2d(map.getDrawLowerLeft().x + i, map.getDrawUpperRight().y - j);
-                    if (map.objectAt(curMapPos) != null) {
                         VBox sq = elementCreator.mapElementView((IMapElement) map.objectAt(curMapPos));
                         mapGrid.add(sq, i + 1, j + 1);
                         GridPane.setHalignment(sq, HPos.CENTER);
-                    }
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -85,31 +82,31 @@ public class App extends Application implements IAnimalObserver {
             for (int l = 0; l <= map.getDrawUpperRight().y - map.getDrawLowerLeft().y + 1; l++)
                 mapGrid.getRowConstraints().add(new RowConstraints(30));
         }
+
     }
 
     public void start(Stage primaryStage) throws Exception {
 
-        TextField movesInput = new TextField();
-        Button startButton = new Button("Run moves");
-        VBox inputBox = new VBox(movesInput, startButton);
+        Button startButton = new Button("Start");
+        Button stopButton = new Button("Stop");
+        VBox inputBox = new VBox(startButton,stopButton);
         VBox appBox = new VBox(this.mapGrid, inputBox);
         mapGrid.setAlignment(Pos.CENTER);
+        mapGrid.setHgap(0);
+        mapGrid.setVgap(0);
+
         inputBox.setAlignment(Pos.CENTER);
         appBox.setAlignment(Pos.CENTER);
-        movesInput.setMaxWidth(80);
 
 
         drawMap(false);
         Scene scene = new Scene(appBox, 400, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
-
+        Thread engineThread = new Thread(this.engine);
+        engineThread.start();
         startButton.setOnAction(ev -> {
-            String[] args = movesInput.getText().split("");
-            MoveDirection[] directions = new OptionsParser().parse(args);
-            engine.setMoves(directions);
-            Thread engineThread = new Thread(engine);
-            engineThread.start();
+            engineThread.interrupt();
         });
     }
 

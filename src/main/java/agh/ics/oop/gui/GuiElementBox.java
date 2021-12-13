@@ -1,7 +1,9 @@
 package agh.ics.oop.gui;
 
 import agh.ics.oop.Animal;
+import agh.ics.oop.Grass;
 import agh.ics.oop.IMapElement;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -14,20 +16,16 @@ import java.io.FileNotFoundException;
 
 public class GuiElementBox {
 
-    Image imageUp = null;
-    Image imageDown = null;
-    Image imageRight = null;
-    Image imageLeft = null;
     Image imageGrass = null;
+    Image imageEmpty = null;
+    Image imageAnimal = null;
 
 
     public GuiElementBox() throws FileNotFoundException {
         try {
-            this.imageUp = new Image(new FileInputStream("src/main/resources/up.png"));
-            this.imageDown = new Image(new FileInputStream("src/main/resources/down.png"));
-            this.imageRight = new Image(new FileInputStream("src/main/resources/right.png"));
-            this.imageLeft = new Image(new FileInputStream("src/main/resources/left.png"));
             this.imageGrass = new Image(new FileInputStream("src/main/resources/grass.png"));
+            this.imageAnimal = new Image(new FileInputStream("src/main/resources/animal.png"));
+            this.imageEmpty = new Image(new FileInputStream("src/main/resources/empty.png"));
 
         } catch (FileNotFoundException ex) {
             System.out.println("Couldn't load files -> " + ex);
@@ -36,27 +34,31 @@ public class GuiElementBox {
     }
 
     public VBox mapElementView(IMapElement mapElement) {
-        Label elementLabel;
         ImageView elementView;
         if (mapElement instanceof Animal) {
-            elementLabel = new Label("Z " + mapElement.getPosition());
-            elementView = switch (((Animal) mapElement).getDirection()) {
-                case NORTH -> new ImageView(imageUp);
-                case EAST -> new ImageView(imageRight);
-                case WEST -> new ImageView(imageLeft);
-                case SOUTH -> new ImageView(imageDown);
+            elementView = new ImageView(imageAnimal);
+            switch (((Animal) mapElement).getDirection()) {
+                case NORTH -> elementView.setRotate(elementView.getRotate() + 0);
+                case EAST -> elementView.setRotate(elementView.getRotate() + 90);
+                case WEST -> elementView.setRotate(elementView.getRotate() + 270);
+                case SOUTH -> elementView.setRotate(elementView.getRotate() + 180);
+                case SOUTHEAST -> elementView.setRotate(elementView.getRotate() + 135);
+                case SOUTHWEST -> elementView.setRotate(elementView.getRotate() + 225);
+                case NORTHWEST -> elementView.setRotate(elementView.getRotate() + 315);
+                case NORTHEAST -> elementView.setRotate(elementView.getRotate() + 45);
             };
-        } else {
-            elementLabel = new Label("Trawa");
+        } else if (mapElement instanceof Grass){
             elementView = new ImageView(imageGrass);
         }
-        elementView.setFitWidth(20);
-        elementView.setFitHeight(20);
-        elementLabel.setFont(new Font(10));
+        else{
+            elementView = new ImageView(imageEmpty);
+        }
+        elementView.setFitWidth(30);
+        elementView.setFitHeight(30);
         VBox elementVBox = new VBox();
-        elementVBox.getChildren().addAll(elementView, elementLabel);
+        elementVBox.setPadding(new Insets(0,0,0,0));
+        elementVBox.getChildren().add(elementView);
         elementVBox.setAlignment(Pos.CENTER);
-
         return elementVBox;
 
     }

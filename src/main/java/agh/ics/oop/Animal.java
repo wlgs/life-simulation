@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Animal extends AbstractWorldMapElement {
-    private MapDirection direction = MapDirection.NORTH;
+    private MapDirection direction = MapDirection.NORTHWEST;
     private IWorldMap map;
+    private int energy = 100;
+    private final Gene genome = new Gene();
 
     public Animal(IWorldMap map, Vector2d initialPosition) {
         super(initialPosition);
@@ -13,55 +15,40 @@ public class Animal extends AbstractWorldMapElement {
         this.observers = new ArrayList<>();
     }
 
-    public String toString() {
-        return switch (this.direction) {
-            case NORTH -> "^";
-            case EAST -> ">";
-            case SOUTH -> "v";
-            case WEST -> "<";
-        };
-    }
-
     public MapDirection getDirection() {
         return this.direction;
     }
 
-    void move(MoveDirection direction) {
-        boolean opposite = false;
-        switch (direction) {
-            case RIGHT:
-                this.direction = this.direction.next();
-                break;
-            case LEFT:
-                this.direction = this.direction.previous();
-                break;
-            case BACKWARD:
-                opposite = true;
-            case FORWARD:
-                Vector2d movementChange = this.direction.toUnitVector();
-                if (opposite)
-                    movementChange = movementChange.opposite();
-                Vector2d newPos = this.position.add(movementChange);
-                if (map.canMoveTo(newPos))
-                    positionChanged(newPos);
-                break;
-        }
+    public void rotate(int times){
+        for (int i =1; i<=times; i++)
+            this.direction = this.direction.next();
+    }
 
+    public void move() {
+        int randomMove = genome.getRotationMove();
+        if (randomMove !=0 && randomMove != 4){
+            rotate(genome.getRotationMove());
+            return;
+        }
+        Vector2d movementChange = this.direction.toUnitVector();
+        if(randomMove == 4)
+            movementChange = movementChange.opposite();
+        Vector2d newPos = this.position.add(movementChange);
+        if (map.canMoveTo(newPos))
+            positionChanged(newPos);
     }
 
     void positionChanged(Vector2d newPos) {
         for (IPositionChangeObserver observer : observers)
-            observer.positionChanged(this.position, newPos);
+            observer.positionChanged(this, this.position, newPos);
         this.position = newPos;
     }
 
-    @Override
-    public String getFileName() {
-        return switch (this.direction) {
-            case NORTH -> "up.png";
-            case EAST -> "right.png";
-            case SOUTH -> "down.png";
-            case WEST -> "left.png";
-        };
+    public int getEnergy(){
+        return energy;
+    }
+
+    public void addEnergy(int val){
+        this.energy += val;
     }
 }

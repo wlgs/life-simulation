@@ -1,21 +1,23 @@
 package agh.ics.oop;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-public class GrassField extends AbstractWorldMap {
-    private final List<Grass> grasses;
-    private final int amount;
+public class GrassField  implements IWorldMap, IPositionChangeObserver {
+    private final  Map<Vector2d, Grass> grasses = new LinkedHashMap<>();
     private final int maxSpawnRange;
     private final int minSpawnRange;
+    private Map<Vector2d, List<Animal>> animals = new LinkedHashMap<>();
+    private final Vector2d mapBorderTR = new Vector2d(10,10);
+    private final Vector2d mapBorderBL = new Vector2d(0, 0);
+    private final boolean foldable = false;
 
 
     public GrassField(int amount) {
-        super(Integer.MAX_VALUE - 1, Integer.MAX_VALUE - 1, Integer.MIN_VALUE + 1, Integer.MIN_VALUE + 1);
-        this.amount = amount;
         this.maxSpawnRange = (int) Math.sqrt(amount * 10);
         this.minSpawnRange = 0;
-        grasses = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             while (true)
                 if (spawnGrassRandomly())
@@ -23,58 +25,43 @@ public class GrassField extends AbstractWorldMap {
         }
     }
 
+    public Grass getGrassAt(Vector2d position) {
+        return this.grasses.get(position);
+    }
+
+    @Override
     public boolean isOccupied(Vector2d position) {
-        if (super.isOccupied(position))
-            return true;
-        for (Grass grass : grasses) {
-            if (position.equals(grass.getPosition()))
-                return true;
-        }
         return false;
     }
 
+    @Override
     public Object objectAt(Vector2d position) {
-        if (super.objectAt(position) != null) {
-            return super.objectAt(position);
-        }
-        for (Grass grass : grasses) {
-            if (grass.isAt(position))
-                return grass;
-        }
-        return null;
+        if (getBestAnimal(position)==null)
+            return getGrassAt(position);
+        return getBestAnimal(position);
     }
 
-    public boolean canMoveTo(Vector2d position) {
-        Object objMovingTo = objectAt(position);
-        if (position.precedes(mapBorderBL) &&
-                position.follows(mapBorderTR) &&
-                !(objMovingTo instanceof Animal)) {
-            //animal can move to desired coords
-            //now lets check if the move is going to happen on grass
-            if (objMovingTo instanceof Grass) {
-                // we would want to remove the grass, but first let us spawn another one explanation down below
-                // try spawning the grass until it succeeds
-                while (true)
-                    if (spawnGrassRandomly())
-                        break;
-                Grass grassToRemove = (Grass) objMovingTo; // we delete after just to make sure the grass doesn't reappear
-                grasses.remove(grassToRemove);
-                mapBorder.removeElement(grassToRemove.getPosition());
+    public Animal getBestAnimal(Vector2d position){
+        int best_energy = -1;
+        Animal best_animal = null;
+        if(animals.get(position)==null)
+            return null;
+        for(Animal a : animals.get(position)){
+            if (best_energy< a.getEnergy()){
+                best_energy = a.getEnergy();
+                best_animal = a;
             }
-            return true;
         }
-        return false;
+        return best_animal;
     }
 
     public boolean spawnGrassRandomly() {
         int randomX = (int) (Math.random() * maxSpawnRange) + minSpawnRange;
         int randomY = (int) (Math.random() * maxSpawnRange) + minSpawnRange;
         Vector2d randomPos = new Vector2d(randomX, randomY);
-        if (objectAt(randomPos) == null) {
+        if (getGrassAt(randomPos) == null) {
             Grass grassToAdd = new Grass(randomPos);
-            grasses.add(grassToAdd);
-            grassToAdd.addObserver(this.mapBorder);
-            mapBorder.addElement(grassToAdd.getPosition());
+            grasses.put(grassToAdd.getPosition(), grassToAdd);
             return true;
         }
         return false;
@@ -83,39 +70,60 @@ public class GrassField extends AbstractWorldMap {
     public boolean spawnGrassAt(Vector2d position) {
         if (objectAt(position) == null) {
             Grass grassToAdd = new Grass(position);
-            grasses.add(grassToAdd);
-            grassToAdd.addObserver(this.mapBorder);
-            mapBorder.addElement(grassToAdd.getPosition());
+            grasses.put(grassToAdd.getPosition(), grassToAdd);
             return true;
         }
         return false;
     }
 
-    public Vector2d getDrawLowerLeft(){
-        return mapBorder.getLowerLeft();
+    @Override
+    public void positionChanged(Animal a, Vector2d oldPosition, Vector2d newPosition) {
+        List<Animal> animalsOnSquare = this.animals.get(oldPosition);
+        List<Animal> newAnimalsOnSquare = this.animals.get(newPosition);
+        this.animals.remove(newPosition);
+        this.animals.remove(oldPosition);
+
+        animalsOnSquare.remove(a);
+        if (objectAt(newPosition) instanceof Grass g){
+            a.addEnergy(g.getEnergyValue());
+            grasses.remove(newPosition);
+        }
+
+        if (newAnimalsOnSquare == null)
+            newAnimalsOnSquare = new ArrayList<>();
+        newAnimalsOnSquare.add(a);
+
+        this.animals.put(oldPosition, animalsOnSquare);
+        this.animals.put(newPosition, newAnimalsOnSquare);
     }
 
-    public Vector2d getDrawUpperRight(){
-        return mapBorder.getUpperRight();
+    public Vector2d getDrawLowerLeft() {
+        return mapBorderBL;
     }
-//    public Vector2d getDrawLowerLeft() {
-//        Vector2d drawLowerLeft = mapBorderTR;
-//        for (Vector2d pos : animals.keySet()) {
-//            drawLowerLeft = drawLowerLeft.lowerLeft(pos);
-//        }
-//        for (Grass grass : grasses) {
-//            drawLowerLeft = drawLowerLeft.lowerLeft(grass.getPosition());
-//        }
-//        return drawLowerLeft;
-//    }
-//    public Vector2d getDrawUpperRight() {
-//        Vector2d drawUpperRight = mapBorderBL;
-//        for (Vector2d pos : animals.keySet()) {
-//            drawUpperRight = drawUpperRight.upperRight(pos);
-//        }
-//        for (Grass grass : grasses) {
-//            drawUpperRight = drawUpperRight.upperRight(grass.getPosition());
-//        }
-//        return drawUpperRight;
-//    }
+
+    public Vector2d getDrawUpperRight() {
+        return mapBorderTR;
+    }
+
+    public boolean canMoveTo(Vector2d position) {
+        return position.precedes(this.mapBorderBL) && position.follows(this.mapBorderTR);
+    }
+
+    public boolean place(Animal animal) {
+        if (canMoveTo(animal.getPosition())) {
+            List<Animal> animalsToAdd = this.animals.get(animal.getPosition());
+            if (animalsToAdd == null){
+                animalsToAdd = new ArrayList<>();
+                this.animals.put(animal.getPosition(), animalsToAdd);
+            }
+            animalsToAdd.add(animal);
+            animal.addObserver(this);
+            return true;
+        }
+        throw new IllegalArgumentException(animal.getPosition() + " is not a valid position to place to");
+    }
+
+    public List<Animal> animalsAt(Vector2d position){
+        return animals.get(position);
+    }
 }

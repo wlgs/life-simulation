@@ -22,6 +22,4 @@ public interface IMapElement {
      * @return Vector2d object of position of the element.
      */
     Vector2d getPosition();
-
-    String getFileName();
 }

@@ -14,6 +14,6 @@ public interface IPositionChangeObserver {
      * @param oldPosition The old position
      * @param newPosition The new position
      */
-    void positionChanged(Vector2d oldPosition, Vector2d newPosition);
+    void positionChanged(Animal a, Vector2d oldPosition, Vector2d newPosition);
 
 }
