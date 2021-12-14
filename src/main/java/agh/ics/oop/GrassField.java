@@ -1,9 +1,6 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GrassField  implements IWorldMap, IPositionChangeObserver {
     private final  Map<Vector2d, Grass> grasses = new LinkedHashMap<>();
@@ -42,17 +39,29 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
     }
 
     public Animal getBestAnimal(Vector2d position){
-        int best_energy = -1;
-        Animal best_animal = null;
-        if(animals.get(position)==null)
+        List<Animal> animalsOnSquare = this.animals.get(position);
+        if (animalsOnSquare == null || animalsOnSquare.size()==0)
             return null;
-        for(Animal a : animals.get(position)){
-            if (best_energy< a.getEnergy()){
-                best_energy = a.getEnergy();
-                best_animal = a;
-            }
+        Comparator<Animal> animalComp = new AnimalsComparator();
+        animalsOnSquare.sort(animalComp);
+        return animalsOnSquare.get(0);
+    }
+
+    public List<Animal> getBestAnimals(Vector2d position){
+        List<Animal> animalsOnSquare = this.animals.get(position);
+        if (animalsOnSquare == null || animalsOnSquare.size()==0)
+            return null;
+        Comparator<Animal> animalComp = new AnimalsComparator();
+        animalsOnSquare.sort(animalComp);
+        int best_energy = animalsOnSquare.get(0).getEnergy();
+        List<Animal> bestAnimals = new ArrayList<>();
+        for (Animal a : animalsOnSquare){
+            if (a.getEnergy()==best_energy)
+                bestAnimals.add(a);
+            else
+                break;
         }
-        return best_animal;
+        return bestAnimals;
     }
 
     public boolean spawnGrassRandomly() {
@@ -76,25 +85,37 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
         return false;
     }
 
+    public void removeAnimalFromMap(Animal a){
+        List<Animal> animalsOnSquare = this.animals.get(a.getPosition());
+        animalsOnSquare.remove(a);
+    }
+
+    public void removeGrassFromMap(Grass g){
+        this.grasses.remove(g.getPosition());
+    }
     @Override
     public void positionChanged(Animal a, Vector2d oldPosition, Vector2d newPosition) {
         List<Animal> animalsOnSquare = this.animals.get(oldPosition);
         List<Animal> newAnimalsOnSquare = this.animals.get(newPosition);
-        this.animals.remove(newPosition);
-        this.animals.remove(oldPosition);
 
-        animalsOnSquare.remove(a);
-        if (objectAt(newPosition) instanceof Grass g){
-            a.addEnergy(g.getEnergyValue());
-            grasses.remove(newPosition);
+        if (newAnimalsOnSquare == null){
+            newAnimalsOnSquare = new ArrayList<>();
+            this.animals.put(newPosition,newAnimalsOnSquare);
+
         }
 
-        if (newAnimalsOnSquare == null)
-            newAnimalsOnSquare = new ArrayList<>();
+        animalsOnSquare.remove(a);
         newAnimalsOnSquare.add(a);
 
-        this.animals.put(oldPosition, animalsOnSquare);
-        this.animals.put(newPosition, newAnimalsOnSquare);
+//        this.animals.get(oldPosition).remove(a);
+//        if (this.animals.get(newPosition) == null)
+//            newAnimalsOnSquare = new ArrayList<>();
+
+
+//        this.animals.remove(newPosition);
+//        this.animals.remove(oldPosition);
+//        this.animals.put(oldPosition, animalsOnSquare);
+//        this.animals.put(newPosition, newAnimalsOnSquare);
     }
 
     public Vector2d getDrawLowerLeft() {
@@ -111,12 +132,12 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
 
     public boolean place(Animal animal) {
         if (canMoveTo(animal.getPosition())) {
-            List<Animal> animalsToAdd = this.animals.get(animal.getPosition());
-            if (animalsToAdd == null){
-                animalsToAdd = new ArrayList<>();
-                this.animals.put(animal.getPosition(), animalsToAdd);
+            List<Animal> animalsListToAdd = this.animals.get(animal.getPosition());
+            if (animalsListToAdd == null){
+                animalsListToAdd = new ArrayList<>();
+                this.animals.put(animal.getPosition(), animalsListToAdd);
             }
-            animalsToAdd.add(animal);
+            animalsListToAdd.add(animal);
             animal.addObserver(this);
             return true;
         }

@@ -6,12 +6,18 @@ import java.util.List;
 public class Animal extends AbstractWorldMapElement {
     private MapDirection direction = MapDirection.NORTHWEST;
     private IWorldMap map;
-    private int energy = 100;
+    private int energy = 30;
     private final Gene genome = new Gene();
 
     public Animal(IWorldMap map, Vector2d initialPosition) {
         super(initialPosition);
         this.map = map;
+        this.observers = new ArrayList<>();
+    }
+    public Animal(IWorldMap map, Vector2d initialPosition, int energy) {
+        super(initialPosition);
+        this.map = map;
+        this.energy = energy;
         this.observers = new ArrayList<>();
     }
 
@@ -26,6 +32,7 @@ public class Animal extends AbstractWorldMapElement {
 
     public void move() {
         int randomMove = genome.getRotationMove();
+        this.addEnergy(-1);
         if (randomMove !=0 && randomMove != 4){
             rotate(genome.getRotationMove());
             return;
@@ -36,6 +43,8 @@ public class Animal extends AbstractWorldMapElement {
         Vector2d newPos = this.position.add(movementChange);
         if (map.canMoveTo(newPos))
             positionChanged(newPos);
+
+
     }
 
     void positionChanged(Vector2d newPos) {
@@ -45,7 +54,7 @@ public class Animal extends AbstractWorldMapElement {
     }
 
     public int getEnergy(){
-        return energy;
+        return this.energy;
     }
 
     public void addEnergy(int val){

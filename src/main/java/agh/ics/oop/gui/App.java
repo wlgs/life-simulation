@@ -34,7 +34,7 @@ public class App extends Application implements IAnimalObserver {
         Vector2d[] positions = {new Vector2d(0, 0),new Vector2d(5, 5),new Vector2d(3, 3)};
         this.engine = new SimulationEngine(map, positions);
         this.engine.addObserver(this);
-        engine.setMoveDelay(300);
+        engine.setMoveDelay(100);
         this.mapGrid = new GridPane();
     }
 
@@ -103,10 +103,9 @@ public class App extends Application implements IAnimalObserver {
         Scene scene = new Scene(appBox, 400, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
-        Thread engineThread = new Thread(this.engine);
-        engineThread.start();
         startButton.setOnAction(ev -> {
-            engineThread.interrupt();
+            Thread engineThread = new Thread(this.engine);
+            engineThread.start();
         });
     }
 
