@@ -5,6 +5,7 @@ import agh.ics.oop.gui.IAnimalObserver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class SimulationEngine implements IEngine, Runnable {
     private List<Animal> animals;
@@ -22,6 +23,20 @@ public class SimulationEngine implements IEngine, Runnable {
                 animals.add(animalToAdd);
         }
 
+    }
+
+
+    public SimulationEngine(int animalsAmount, int startEnergy, int moveEnergy, GrassField map) {
+        this.animals = new ArrayList<>();
+        this.map = map;
+        for(int i = 1; i <= animalsAmount; i++){
+            Random r = new Random();
+            int randomX = r.nextInt(map.getDrawUpperRight().x);
+            int randomY = r.nextInt(map.getDrawUpperRight().y);
+            Animal animalToAdd = new Animal(map, new Vector2d(randomX,randomY), startEnergy, moveEnergy);
+            if (map.place(animalToAdd))
+                animals.add(animalToAdd);
+        }
     }
 
     public Animal getAnimal(int idx) {

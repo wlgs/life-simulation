@@ -30,11 +30,11 @@ public class App extends Application implements IAnimalObserver {
 
 
     public void init() {
-        this.map = new GrassField(10);
-        Vector2d[] positions = {new Vector2d(0, 0),new Vector2d(5, 5),new Vector2d(3, 3)};
-        this.engine = new SimulationEngine(map, positions);
-        this.engine.addObserver(this);
-        engine.setMoveDelay(100);
+//        this.map = new GrassField(10);
+//        Vector2d[] positions = {new Vector2d(0, 0),new Vector2d(5, 5),new Vector2d(3, 3)};
+//        this.engine = new SimulationEngine(map, positions);
+//        this.engine.addObserver(this);
+//        engine.setMoveDelay(100);
         this.mapGrid = new GridPane();
     }
 
@@ -89,21 +89,62 @@ public class App extends Application implements IAnimalObserver {
 
         Button startButton = new Button("Start");
         Button stopButton = new Button("Stop");
-        VBox inputBox = new VBox(startButton,stopButton);
-        VBox appBox = new VBox(this.mapGrid, inputBox);
-        mapGrid.setAlignment(Pos.CENTER);
+
+        HBox buttonBox = new HBox(startButton,stopButton);
+
+        TextField mapWidthTf = new TextField("50");
+        TextField mapHeightTf = new TextField("30");
+        TextField animalsAmountTf = new TextField("5");
+        TextField startEnergyTf = new TextField("40");
+        TextField moveEnergyTf = new TextField("2");
+        TextField plantEnergyTf = new TextField("20");
+        TextField jungleRatioTf = new TextField("0.5");
+
+        Label mapWidth = new Label("Map width:");
+        Label mapHeight = new Label("Map height:");
+        Label animalsAmount = new Label("Animals amount:");
+        Label startEnergy = new Label("Start energy:");
+        Label moveEnergy = new Label("Move energy:");
+        Label plantEnergy = new Label("Plant energy:");
+        Label jungleRatio = new Label("Jungle ratio:");
+
+        HBox var1 = new HBox(mapWidth, mapWidthTf);
+        HBox var2 = new HBox(mapHeight, mapHeightTf);
+        HBox var3 = new HBox(animalsAmount, animalsAmountTf);
+        HBox var4 = new HBox(startEnergy, startEnergyTf);
+        HBox var5 = new HBox(moveEnergy, moveEnergyTf);
+        HBox var6 = new HBox(plantEnergy, plantEnergyTf);
+        HBox var7 = new HBox(jungleRatio, jungleRatioTf);
+
+        VBox inputBox = new VBox(var1,var2,var3,var4,var5,var6,var7,buttonBox);
+
+        HBox appBox = new HBox(this.mapGrid, inputBox);
+
+//        mapGrid.setAlignment(Pos.CENTER);
         mapGrid.setHgap(0);
         mapGrid.setVgap(0);
+//        buttonBox.setAlignment(Pos.CENTER);
+//        appBox.setAlignment(Pos.CENTER);
+        inputBox.setPadding(new Insets(0,0,0,10));
 
-        inputBox.setAlignment(Pos.CENTER);
-        appBox.setAlignment(Pos.CENTER);
 
-
-        drawMap(false);
-        Scene scene = new Scene(appBox, 400, 400);
+        Scene scene = new Scene(appBox, 1280, 800);
         primaryStage.setScene(scene);
         primaryStage.show();
         startButton.setOnAction(ev -> {
+            this.map = new GrassField(
+                    Integer.parseInt(mapWidthTf.getText()),
+                    Integer.parseInt(mapHeightTf.getText()),
+                    Integer.parseInt(plantEnergyTf.getText()),
+                    Float.parseFloat(jungleRatioTf.getText()));
+            this.engine = new SimulationEngine(
+                    Integer.parseInt(animalsAmountTf.getText()),
+                    Integer.parseInt(startEnergyTf.getText()),
+                    Integer.parseInt(moveEnergyTf.getText()),
+                    this.map);
+            this.engine.addObserver(this);
+            engine.setMoveDelay(100);
+            drawMap(false);
             Thread engineThread = new Thread(this.engine);
             engineThread.start();
         });

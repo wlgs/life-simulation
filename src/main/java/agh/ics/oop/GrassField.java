@@ -7,19 +7,33 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
     private final int maxSpawnRange;
     private final int minSpawnRange;
     private Map<Vector2d, List<Animal>> animals = new LinkedHashMap<>();
-    private final Vector2d mapBorderTR = new Vector2d(10,10);
-    private final Vector2d mapBorderBL = new Vector2d(0, 0);
+    private final Vector2d mapBorderTR;
+    private final Vector2d mapBorderBL;
     private final boolean foldable = false;
+    private final int plantEnergy;
 
 
     public GrassField(int amount) {
+        this.mapBorderBL = new Vector2d(0,0);
+        this.mapBorderTR = new Vector2d(10, 10);
         this.maxSpawnRange = (int) Math.sqrt(amount * 10);
         this.minSpawnRange = 0;
+        this.plantEnergy = 10;
         for (int i = 0; i < amount; i++) {
             while (true)
                 if (spawnGrassRandomly())
                     break;
         }
+    }
+
+    public GrassField(int mapWidth, int mapHeight, int plantEnergy, float jungleRatio){
+
+        this.maxSpawnRange = (int) Math.sqrt(2 * 10);
+        this.minSpawnRange = 0;
+
+        this.mapBorderBL = new Vector2d(0,0);
+        this.mapBorderTR = new Vector2d(mapWidth-1, mapHeight-1);
+        this.plantEnergy = plantEnergy;
     }
 
     public Grass getGrassAt(Vector2d position) {
@@ -69,7 +83,7 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
         int randomY = (int) (Math.random() * maxSpawnRange) + minSpawnRange;
         Vector2d randomPos = new Vector2d(randomX, randomY);
         if (getGrassAt(randomPos) == null) {
-            Grass grassToAdd = new Grass(randomPos);
+            Grass grassToAdd = new Grass(randomPos, plantEnergy);
             grasses.put(grassToAdd.getPosition(), grassToAdd);
             return true;
         }
@@ -78,7 +92,7 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
 
     public boolean spawnGrassAt(Vector2d position) {
         if (objectAt(position) == null) {
-            Grass grassToAdd = new Grass(position);
+            Grass grassToAdd = new Grass(position, plantEnergy);
             grasses.put(grassToAdd.getPosition(), grassToAdd);
             return true;
         }
