@@ -16,7 +16,7 @@ public class GeneTest {
         a2.getAnimalGene().printGenome();
         reproduced.printGenome();
 
-        // just for seeing if it actually works, test would be a waste of time to implement
+        // just for seeing if it actually works, test would be a waste of time to implement I guess
 
     }
 }
