@@ -68,6 +68,7 @@ public class GuiElementBox {
 //        elementVBox.getChildren().add(elementView);
         elementVBox.getChildren().add(stackPane);
         elementVBox.setAlignment(Pos.CENTER);
+        // TODO LET IT RETURN STACKPANE NOT VBOX THATS CRINGE!
         return elementVBox;
 
     }

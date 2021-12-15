@@ -34,6 +34,9 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
         this.mapBorderBL = new Vector2d(0,0);
         this.mapBorderTR = new Vector2d(mapWidth-1, mapHeight-1);
         this.plantEnergy = plantEnergy;
+
+        // TODO SPAWN JUNGLE CREATE JUNGLE!
+
     }
 
     public Grass getGrassAt(Vector2d position) {

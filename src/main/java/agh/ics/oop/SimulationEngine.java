@@ -94,13 +94,15 @@ public class SimulationEngine implements IEngine, Runnable {
         Random r = new Random();
         Map<Vector2d, Boolean> alreadyDone = new LinkedHashMap<>();
         List<Animal> newAnimals = new ArrayList<>();
+        List<Animal> healthyAnimals = new ArrayList<>();
+        List<Animal> candidates = new ArrayList<>();
         for (Animal a : animals){
 
             Vector2d posToCheck = a.getPosition();
             if (alreadyDone.get(posToCheck)!=null){
                 continue;
             }
-            List<Animal> healthyAnimals = new ArrayList<>();
+            healthyAnimals.clear();
             int animalsAmount = map.animalsAt(posToCheck).size();
             if (animalsAmount<2)
                 continue;
@@ -111,7 +113,7 @@ public class SimulationEngine implements IEngine, Runnable {
             if (healthyAnimals.size()<2)
                 continue;
             healthyAnimals.sort(animalComp);
-            List<Animal> candidates = new ArrayList<>();
+            candidates.clear();
             candidates.add(healthyAnimals.get(0));
             healthyAnimals.remove(0);
             int best_energy = candidates.get(0).getEnergy();
@@ -174,6 +176,9 @@ public class SimulationEngine implements IEngine, Runnable {
         removeDeadAnimals();
         checkFood();
         reproduceAnimals();
+
+        //TODO: SPAWN GRASS 1 IN SAVANNAH 1 IN JUNGLE
+
 
     }
 

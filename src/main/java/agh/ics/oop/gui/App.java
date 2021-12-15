@@ -48,6 +48,9 @@ public class App extends Application implements IAnimalObserver {
         mapGrid.add(yx, 0, 0);
         GridPane.setHalignment(yx, HPos.CENTER);
         GuiElementBox elementCreator;
+
+        //TODO DISABLE DRAWING Y/X COORDS
+
         try {
             elementCreator = new GuiElementBox();
             for (int k = 0; k <= map.getDrawUpperRight().x - map.getDrawLowerLeft().x; k++) {
@@ -72,6 +75,10 @@ public class App extends Application implements IAnimalObserver {
                     VBox sq = elementCreator.mapElementView((IMapElement) map.objectAt(curMapPos));
                     mapGrid.add(sq, i + 1, j + 1);
                     GridPane.setHalignment(sq, HPos.CENTER);
+
+                    //TODO APPLY COLOR FILTER TO ANIMAL BASED ON HIS ENERGY LEVEL
+                    //TODO APPLY FLOOR COLOR BASED ON JUNGLE/SAVANNA, MAKE METHOD IS SAVANNA?
+
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -190,9 +197,14 @@ public class App extends Application implements IAnimalObserver {
                     this.map);
             this.engine.addObserver(this);
             engine.setMoveDelay(Integer.parseInt(moveDelayTf.getText()));
+
+
+            // TODO: draw map normally without redraw=false/true
             drawMap(false);
+
             Thread engineThread = new Thread(this.engine);
             engineThread.start();
+
             lineChart.setVisible(true);
             startButton.setVisible(true);
             stopButton.setVisible(true);
@@ -215,6 +227,11 @@ public class App extends Application implements IAnimalObserver {
             this.eraCount++;
 
             this.animalsChartSeries.getData().add(new XYChart.Data(this.eraCount, this.engine.countAnimals()));
+
+            // TODO: complete other charts!!
+
+
+
         });
     }
 
