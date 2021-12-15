@@ -3,23 +3,25 @@ package agh.ics.oop.gui;
 import agh.ics.oop.*;
 import javafx.application.Application;
 import javafx.application.Platform;
+
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.io.FileInputStream;
+
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.List;
+
 
 public class App extends Application implements IAnimalObserver {
 
@@ -27,14 +29,15 @@ public class App extends Application implements IAnimalObserver {
     private GridPane mapGrid;
     private SimulationEngine engine;
     private GrassField map;
+    private int eraCount = 0;
+    private XYChart.Series animalsChartSeries = new XYChart.Series();
+    private XYChart.Series plantChartSeries = new XYChart.Series();
+    private XYChart.Series energyAvgChartSeries = new XYChart.Series();
+    private XYChart.Series lifespanDeadAnimalAvgChartSeries = new XYChart.Series();
+    private XYChart.Series childAmountAvgChartSeries = new XYChart.Series();
 
 
     public void init() {
-//        this.map = new GrassField(10);
-//        Vector2d[] positions = {new Vector2d(0, 0),new Vector2d(5, 5),new Vector2d(3, 3)};
-//        this.engine = new SimulationEngine(map, positions);
-//        this.engine.addObserver(this);
-//        engine.setMoveDelay(100);
         this.mapGrid = new GridPane();
     }
 
@@ -66,9 +69,9 @@ public class App extends Application implements IAnimalObserver {
             for (int i = 0; i <= map.getDrawUpperRight().x - map.getDrawLowerLeft().x; i++) {
                 for (int j = 0; j <= map.getDrawUpperRight().y - map.getDrawLowerLeft().y; j++) {
                     Vector2d curMapPos = new Vector2d(map.getDrawLowerLeft().x + i, map.getDrawUpperRight().y - j);
-                        VBox sq = elementCreator.mapElementView((IMapElement) map.objectAt(curMapPos));
-                        mapGrid.add(sq, i + 1, j + 1);
-                        GridPane.setHalignment(sq, HPos.CENTER);
+                    VBox sq = elementCreator.mapElementView((IMapElement) map.objectAt(curMapPos));
+                    mapGrid.add(sq, i + 1, j + 1);
+                    GridPane.setHalignment(sq, HPos.CENTER);
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -78,9 +81,9 @@ public class App extends Application implements IAnimalObserver {
 
         if (!redraw) {
             for (int k = 0; k <= map.getDrawUpperRight().x - map.getDrawLowerLeft().x + 1; k++)
-                mapGrid.getColumnConstraints().add(new ColumnConstraints(30));
+                mapGrid.getColumnConstraints().add(new ColumnConstraints(20));
             for (int l = 0; l <= map.getDrawUpperRight().y - map.getDrawLowerLeft().y + 1; l++)
-                mapGrid.getRowConstraints().add(new RowConstraints(30));
+                mapGrid.getRowConstraints().add(new RowConstraints(20));
         }
 
     }
@@ -88,9 +91,10 @@ public class App extends Application implements IAnimalObserver {
     public void start(Stage primaryStage) throws Exception {
 
         Button startButton = new Button("Start");
+        Button setParamsButton = new Button("Set parameters");
         Button stopButton = new Button("Stop");
 
-        HBox buttonBox = new HBox(startButton,stopButton);
+        HBox buttonBox = new HBox(setParamsButton, startButton,stopButton);
 
         TextField mapWidthTf = new TextField("50");
         TextField mapHeightTf = new TextField("30");
@@ -99,14 +103,25 @@ public class App extends Application implements IAnimalObserver {
         TextField moveEnergyTf = new TextField("2");
         TextField plantEnergyTf = new TextField("20");
         TextField jungleRatioTf = new TextField("0.5");
+        TextField moveDelayTf = new TextField("200");
 
-        Label mapWidth = new Label("Map width:");
-        Label mapHeight = new Label("Map height:");
-        Label animalsAmount = new Label("Animals amount:");
-        Label startEnergy = new Label("Start energy:");
-        Label moveEnergy = new Label("Move energy:");
-        Label plantEnergy = new Label("Plant energy:");
-        Label jungleRatio = new Label("Jungle ratio:");
+        mapWidthTf.setMaxWidth(60);
+        mapHeightTf.setMaxWidth(60);
+        animalsAmountTf.setMaxWidth(60);
+        startEnergyTf.setMaxWidth(60);
+        moveEnergyTf.setMaxWidth(60);
+        plantEnergyTf.setMaxWidth(60);
+        jungleRatioTf.setMaxWidth(60);
+        moveDelayTf.setMaxWidth(60);
+
+        Label mapWidth = new Label("Map width: ");
+        Label mapHeight = new Label("Map height: ");
+        Label animalsAmount = new Label("Animals amount: ");
+        Label startEnergy = new Label("Start energy: ");
+        Label moveEnergy = new Label("Move energy: ");
+        Label plantEnergy = new Label("Plant energy: ");
+        Label jungleRatio = new Label("Jungle ratio: ");
+        Label moveDelay = new Label("Movement delay [ms]: ");
 
         HBox var1 = new HBox(mapWidth, mapWidthTf);
         HBox var2 = new HBox(mapHeight, mapHeightTf);
@@ -115,23 +130,54 @@ public class App extends Application implements IAnimalObserver {
         HBox var5 = new HBox(moveEnergy, moveEnergyTf);
         HBox var6 = new HBox(plantEnergy, plantEnergyTf);
         HBox var7 = new HBox(jungleRatio, jungleRatioTf);
+        HBox var8 = new HBox(moveDelay, moveDelayTf);
 
-        VBox inputBox = new VBox(var1,var2,var3,var4,var5,var6,var7,buttonBox);
+        var1.setAlignment(Pos.BASELINE_RIGHT);
+        var2.setAlignment(Pos.BASELINE_RIGHT);
+        var3.setAlignment(Pos.BASELINE_RIGHT);
+        var4.setAlignment(Pos.BASELINE_RIGHT);
+        var5.setAlignment(Pos.BASELINE_RIGHT);
+        var6.setAlignment(Pos.BASELINE_RIGHT);
+        var7.setAlignment(Pos.BASELINE_RIGHT);
+        var8.setAlignment(Pos.BASELINE_RIGHT);
 
-        HBox appBox = new HBox(this.mapGrid, inputBox);
+        VBox inputBox = new VBox(var1,var2,var3,var4,var5,var6,var7,var8);
+        VBox input2Box = new VBox(inputBox, buttonBox);
+        HBox screenBox = new HBox(this.mapGrid, input2Box);
 
-//        mapGrid.setAlignment(Pos.CENTER);
+
+
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        final LineChart<Number,Number> lineChart = new LineChart<>(xAxis, yAxis);
+        lineChart.setTitle("Total animals per Era");
+        this.animalsChartSeries.setName("Era");
+        lineChart.getData().add(this.animalsChartSeries);
+
+        lineChart.setVisible(false);
+        startButton.setVisible(false);
+        stopButton.setVisible(false);
+
+        HBox dataBox = new HBox(lineChart);
+        VBox appBox = new VBox(screenBox, dataBox);
+
         mapGrid.setHgap(0);
         mapGrid.setVgap(0);
-//        buttonBox.setAlignment(Pos.CENTER);
-//        appBox.setAlignment(Pos.CENTER);
-        inputBox.setPadding(new Insets(0,0,0,10));
-
+        inputBox.setPadding(new Insets(0,0,0,20));
 
         Scene scene = new Scene(appBox, 1280, 800);
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(e -> Platform.exit());
         primaryStage.show();
+
+
+
+
         startButton.setOnAction(ev -> {
+            this.engine.startEngine();
+        });
+
+        setParamsButton.setOnAction(ev -> {
             this.map = new GrassField(
                     Integer.parseInt(mapWidthTf.getText()),
                     Integer.parseInt(mapHeightTf.getText()),
@@ -143,18 +189,32 @@ public class App extends Application implements IAnimalObserver {
                     Integer.parseInt(moveEnergyTf.getText()),
                     this.map);
             this.engine.addObserver(this);
-            engine.setMoveDelay(100);
+            engine.setMoveDelay(Integer.parseInt(moveDelayTf.getText()));
             drawMap(false);
             Thread engineThread = new Thread(this.engine);
             engineThread.start();
+            lineChart.setVisible(true);
+            startButton.setVisible(true);
+            stopButton.setVisible(true);
+            setParamsButton.setVisible(false);
+            inputBox.setVisible(false);
+        });
+
+        stopButton.setOnAction(ev -> {
+            this.engine.stopEngine();
         });
     }
+
 
     @Override
     public void animalMoved() {
         Platform.runLater(() -> {
             mapGrid.getChildren().clear();
             drawMap(true);
+
+            this.eraCount++;
+
+            this.animalsChartSeries.getData().add(new XYChart.Data(this.eraCount, this.engine.countAnimals()));
         });
     }
 

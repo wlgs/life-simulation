@@ -47,7 +47,9 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
 
     @Override
     public Object objectAt(Vector2d position) {
-        if (getBestAnimal(position)==null)
+        if (animals.get(position)==null)
+            return getGrassAt(position);
+        if (animals.get(position).size()==0)
             return getGrassAt(position);
         return getBestAnimal(position);
     }

@@ -3,6 +3,9 @@ package agh.ics.oop;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GrassFieldTest {
     @Test
     public void canMoveToTest() {
@@ -66,6 +69,38 @@ public class GrassFieldTest {
         map.place(new Animal(map, new Vector2d(3, 3), 10));
 
         Assertions.assertEquals(3, map.getBestAnimals(new Vector2d(3,3)).size());
+
+    }
+
+    @Test
+    public void reproduceTest(){
+        GrassField map = new GrassField(10);
+
+        Animal firstAnimal = new Animal(map, new Vector2d(3,3), 100);
+        Animal secondAnimal = new Animal(map, new Vector2d(3,3), 100);
+        Animal thirdAnimal = new Animal(map, new Vector2d(3,3), 100);
+
+        Animal other1Animal = new Animal(map, new Vector2d(4,4), 100);
+        Animal other2Animal = new Animal(map, new Vector2d(4,4), 100);
+
+        Animal lonelyAnimal = new Animal(map, new Vector2d(5,4), 100);
+
+
+
+        List<Animal> animalsList = new ArrayList<>();
+        animalsList.add(firstAnimal);
+        animalsList.add(secondAnimal);
+        animalsList.add(other1Animal);
+        animalsList.add(other2Animal);
+        animalsList.add(thirdAnimal);
+        animalsList.add(lonelyAnimal);
+        SimulationEngine engine = new SimulationEngine(map, animalsList);
+
+        engine.reproduceAnimals();
+
+        Assertions.assertEquals(4, map.animalsAt(new Vector2d(3,3)).size());
+        Assertions.assertEquals(3, map.animalsAt(new Vector2d(4,4)).size());
+        Assertions.assertEquals(1, map.animalsAt(new Vector2d(5,4)).size());
 
     }
 }

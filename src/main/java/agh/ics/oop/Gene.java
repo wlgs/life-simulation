@@ -37,7 +37,6 @@ public class Gene {
         int[] gArr2 = a2.getAnimalGene().getGenomeArray();
         int totalEnergy = a1.getEnergy()+a2.getEnergy();
         int whereToCut = (a1.getEnergy()*32)/ totalEnergy;
-        System.out.println(whereToCut);
         Random r = new Random();
 
         //left side

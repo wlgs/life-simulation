@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
@@ -35,6 +36,7 @@ public class GuiElementBox {
 
     public VBox mapElementView(IMapElement mapElement) {
         ImageView elementView;
+        ImageView elementViewEmpty = new ImageView(imageEmpty);
         if (mapElement instanceof Animal) {
             elementView = new ImageView(imageAnimal);
             switch (((Animal) mapElement).getDirection()) {
@@ -53,11 +55,18 @@ public class GuiElementBox {
         else{
             elementView = new ImageView(imageEmpty);
         }
-        elementView.setFitWidth(30);
-        elementView.setFitHeight(30);
+        elementView.setFitWidth(20);
+        elementView.setFitHeight(20);
+        elementViewEmpty.setFitHeight(20);
+        elementViewEmpty.setFitWidth(20);
         VBox elementVBox = new VBox();
+
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(elementViewEmpty, elementView);
+
         elementVBox.setPadding(new Insets(0,0,0,0));
-        elementVBox.getChildren().add(elementView);
+//        elementVBox.getChildren().add(elementView);
+        elementVBox.getChildren().add(stackPane);
         elementVBox.setAlignment(Pos.CENTER);
         return elementVBox;
 
