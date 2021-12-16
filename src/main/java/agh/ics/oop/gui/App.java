@@ -103,11 +103,11 @@ public class App extends Application implements IAnimalObserver {
 
         HBox buttonBox = new HBox(setParamsButton, startButton,stopButton);
 
-        TextField mapWidthTf = new TextField("50");
-        TextField mapHeightTf = new TextField("30");
-        TextField animalsAmountTf = new TextField("5");
-        TextField startEnergyTf = new TextField("40");
-        TextField moveEnergyTf = new TextField("2");
+        TextField mapWidthTf = new TextField("20");
+        TextField mapHeightTf = new TextField("20");
+        TextField animalsAmountTf = new TextField("20");
+        TextField startEnergyTf = new TextField("20");
+        TextField moveEnergyTf = new TextField("1");
         TextField plantEnergyTf = new TextField("20");
         TextField jungleRatioTf = new TextField("0.5");
         TextField moveDelayTf = new TextField("200");

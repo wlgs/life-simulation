@@ -151,7 +151,10 @@ public class SimulationEngine implements IEngine, Runnable {
 
             }
 
-            Animal childAnimal = new Animal(this.map,
+
+            //todo animal method reproduce with?
+            Animal childAnimal = new Animal(
+                    this.map,
                     posToCheck,
                     firstAnimal.getStartEnergy(),
                     firstAnimal.getMoveEnergy(),
