@@ -4,10 +4,12 @@ import agh.ics.oop.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.io.FileInputStream;
@@ -41,7 +43,7 @@ public class GuiElementBox {
              elementViewEmpty = new ImageView(imageEmpty);
         else
             elementViewEmpty = new ImageView(imageJungle);
-        if (mapElement instanceof Animal) {
+        if (mapElement instanceof Animal a) {
             elementView = new ImageView(imageAnimal);
             switch (((Animal) mapElement).getDirection()) {
                 case NORTH -> elementView.setRotate(elementView.getRotate() + 0);
@@ -53,6 +55,18 @@ public class GuiElementBox {
                 case NORTHWEST -> elementView.setRotate(elementView.getRotate() + 315);
                 case NORTHEAST -> elementView.setRotate(elementView.getRotate() + 45);
             };
+            if (a.getEnergy()<0.25*a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(-1,0,0,0));
+            else if (a.getEnergy()<0.5*a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(-0.6,0,0,0));
+            else if (a.getEnergy()<0.75*a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(-0.2,0,0,0));
+            else if(a.getEnergy()<1.25*a.getStartEnergy() && a.getEnergy()>a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(0.2,0,0,0));
+            else if(a.getEnergy()<1.5*a.getStartEnergy() && a.getEnergy()>a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(0.4,0,0,0));
+            else if(a.getEnergy()<1.75*a.getStartEnergy() && a.getEnergy()>a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(0.6,0,0,0));
         } else if (mapElement instanceof Grass){
             elementView = new ImageView(imageGrass);
         }
@@ -62,6 +76,8 @@ public class GuiElementBox {
         }
         elementView.setFitHeight(20);
         elementView.setFitWidth(20);
+
+
         elementViewEmpty.setFitHeight(20);
         elementViewEmpty.setFitWidth(20);
         StackPane stackPane = new StackPane();
