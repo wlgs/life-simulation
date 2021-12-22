@@ -14,15 +14,24 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
     private final float jungleRatio;
     private final Vector2d jungleBorderTR;
     private final Vector2d jungleBorderBL;
+    private final int jungleSize;
+    private final int mapWidth;
+    private final int mapHeight;
+    private int totalGrassInJungle = 0;
+    private int totalGrassOutsideJungle = 0;
+    private Random r = new Random();
 
 
     public GrassField(int amount) {
         this.mapBorderBL = new Vector2d(0,0);
         this.mapBorderTR = new Vector2d(10, 10);
+        this.mapHeight = 11;
+        this.mapWidth = 11;
         this.maxSpawnRange = (int) Math.sqrt(amount * 10);
         this.minSpawnRange = 0;
         this.plantEnergy = 10;
         this.jungleRatio=0;
+        this.jungleSize=0;
         this.jungleBorderBL= new Vector2d(0,0);
         this.jungleBorderTR= new Vector2d(0,0);
         for (int i = 0; i < amount; i++) {
@@ -33,24 +42,65 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
     }
 
     public GrassField(int mapWidth, int mapHeight, int plantEnergy, float jungleRatio){
-
+        this.mapWidth = mapWidth;
+        this.mapHeight = mapHeight;
         this.maxSpawnRange = (int) Math.sqrt(2 * 10);
         this.minSpawnRange = 0;
         this.mapBorderBL = new Vector2d(0,0);
         this.mapBorderTR = new Vector2d(mapWidth-1, mapHeight-1);
         this.plantEnergy = plantEnergy;
         this.jungleRatio = jungleRatio;
-        int jungleWidth = (int) (1.0/((1.0/Math.sqrt(jungleRatio))+1)*(this.mapBorderTR.x+1));
-        int diffX = this.mapBorderTR.x - jungleWidth;
-        int diffY = this.mapBorderTR.y - jungleWidth;
-        this.jungleBorderTR = new Vector2d(this.mapBorderTR.x-diffX/2, this.mapBorderTR.y-diffY/2);
-        this.jungleBorderBL = new Vector2d(this.mapBorderBL.x + diffX/2, this.mapBorderBL.y+diffY/2);
+        this.jungleSize = (int) ((Math.sqrt(jungleRatio))*(this.mapBorderTR.x+1));
+        int diffX = this.mapBorderTR.x+1 - jungleSize;
+        int diffY = this.mapBorderTR.y+1 - jungleSize;
+        this.jungleBorderTR = new Vector2d((int) Math.ceil(this.mapBorderTR.x-diffX/2.0), (int) Math.ceil(this.mapBorderTR.y-diffY/2.0));
+        this.jungleBorderBL = new Vector2d((int) Math.ceil(this.mapBorderBL.x + diffX/2.0), (int) Math.ceil(this.mapBorderBL.y+diffY/2.0));
 //        System.out.println(this.jungleBorderBL);
 //        System.out.println(this.jungleBorderTR);
-//        System.out.println(jungleWidth);
+//        System.out.println(jungleSize);
 //        System.out.println(diffX);
 //        System.out.println(diffY);
 
+    }
+
+    public void substractTotalGrassInJungle(int v){
+        this.totalGrassInJungle -= v;
+    }
+
+    public void substractTotalGrassOutsideJungle(int v){
+        this.totalGrassOutsideJungle -= v;
+    }
+
+    public boolean canSpawnMoreGrassInJungle(){
+        return this.totalGrassInJungle < this.jungleSize * this.jungleSize;
+    }
+
+    public boolean canSpawnMoreGrassOutsideJungle(){
+        return this.totalGrassOutsideJungle < (this.mapWidth * this.mapHeight) - (this.jungleSize * this.jungleSize);
+    }
+
+    public void spawnGrassInJungle(){
+        Vector2d randomPos;
+        do {
+            int randomX = this.r.nextInt(this.jungleBorderTR.x - this.jungleBorderBL.x + 1) + this.jungleBorderBL.x;
+            int randomY = this.r.nextInt(this.jungleBorderTR.y - this.jungleBorderBL.y + 1) + this.jungleBorderBL.y;
+            randomPos = new Vector2d(randomX, randomY);
+        } while (getGrassAt(randomPos) != null);
+        Grass grassToAdd = new Grass(randomPos, this.plantEnergy);
+        grasses.put(randomPos, grassToAdd);
+        this.totalGrassInJungle+=1;
+    }
+
+    public void spawnGrassOutsideJungle(){
+        Vector2d randomPos;
+        do {
+            int randomX = this.r.nextInt(this.mapBorderTR.x+1);
+            int randomY = this.r.nextInt(this.mapBorderTR.y+1);
+            randomPos = new Vector2d(randomX, randomY);
+        } while (isJungleTile(randomPos) || getGrassAt(randomPos) != null);
+        Grass grassToAdd = new Grass(randomPos, plantEnergy);
+        grasses.put(randomPos, grassToAdd);
+        this.totalGrassOutsideJungle+=1;
     }
 
     public boolean isJungleTile(Vector2d position){

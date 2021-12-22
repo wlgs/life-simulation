@@ -86,6 +86,10 @@ public class SimulationEngine implements IEngine, Runnable {
                 for (Animal ba : bestAnimals)
                     ba.addEnergy(portion);
                 map.removeGrassFromMap(g);
+                if (map.isJungleTile(g.getPosition()))
+                    map.substractTotalGrassInJungle(1);
+                else
+                    map.substractTotalGrassOutsideJungle(1);
             }
         }
     }
@@ -170,14 +174,19 @@ public class SimulationEngine implements IEngine, Runnable {
         }
     }
 
+    public void spawnGrass(){
+        if (this.map.canSpawnMoreGrassInJungle())
+            this.map.spawnGrassInJungle();
+        if (this.map.canSpawnMoreGrassOutsideJungle())
+            this.map.spawnGrassOutsideJungle();
+    }
+
+
     public void calculateEra(){
         removeDeadAnimals();
         checkFood();
         reproduceAnimals();
-
-        //TODO: SPAWN GRASS 1 IN SAVANNAH 1 IN JUNGLE
-
-
+        spawnGrass();
     }
 
     public void startEngine(){
