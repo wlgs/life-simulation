@@ -11,6 +11,9 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
     private final Vector2d mapBorderBL;
     private final boolean foldable = false;
     private final int plantEnergy;
+    private final float jungleRatio;
+    private final Vector2d jungleBorderTR;
+    private final Vector2d jungleBorderBL;
 
 
     public GrassField(int amount) {
@@ -19,6 +22,9 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
         this.maxSpawnRange = (int) Math.sqrt(amount * 10);
         this.minSpawnRange = 0;
         this.plantEnergy = 10;
+        this.jungleRatio=0;
+        this.jungleBorderBL= new Vector2d(0,0);
+        this.jungleBorderTR= new Vector2d(0,0);
         for (int i = 0; i < amount; i++) {
             while (true)
                 if (spawnGrassRandomly())
@@ -30,13 +36,25 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
 
         this.maxSpawnRange = (int) Math.sqrt(2 * 10);
         this.minSpawnRange = 0;
-
         this.mapBorderBL = new Vector2d(0,0);
         this.mapBorderTR = new Vector2d(mapWidth-1, mapHeight-1);
         this.plantEnergy = plantEnergy;
+        this.jungleRatio = jungleRatio;
+        int jungleWidth = (int) (1.0/((1.0/Math.sqrt(jungleRatio))+1)*(this.mapBorderTR.x+1));
+        int diffX = this.mapBorderTR.x - jungleWidth;
+        int diffY = this.mapBorderTR.y - jungleWidth;
+        this.jungleBorderTR = new Vector2d(this.mapBorderTR.x-diffX/2, this.mapBorderTR.y-diffY/2);
+        this.jungleBorderBL = new Vector2d(this.mapBorderBL.x + diffX/2, this.mapBorderBL.y+diffY/2);
+//        System.out.println(this.jungleBorderBL);
+//        System.out.println(this.jungleBorderTR);
+//        System.out.println(jungleWidth);
+//        System.out.println(diffX);
+//        System.out.println(diffY);
 
-        // TODO SPAWN JUNGLE CREATE JUNGLE!
+    }
 
+    public boolean isJungleTile(Vector2d position){
+        return position.precedes(this.jungleBorderBL) && position.follows(this.jungleBorderTR);
     }
 
     public Grass getGrassAt(Vector2d position) {
@@ -115,26 +133,10 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
     @Override
     public void positionChanged(Animal a, Vector2d oldPosition, Vector2d newPosition) {
         List<Animal> animalsOnSquare = this.animals.get(oldPosition);
-        List<Animal> newAnimalsOnSquare = this.animals.get(newPosition);
-
-        if (newAnimalsOnSquare == null){
-            newAnimalsOnSquare = new ArrayList<>();
-            this.animals.put(newPosition,newAnimalsOnSquare);
-
-        }
+        List<Animal> newAnimalsOnSquare = this.animals.computeIfAbsent(newPosition, k -> new ArrayList<>());
 
         animalsOnSquare.remove(a);
         newAnimalsOnSquare.add(a);
-
-//        this.animals.get(oldPosition).remove(a);
-//        if (this.animals.get(newPosition) == null)
-//            newAnimalsOnSquare = new ArrayList<>();
-
-
-//        this.animals.remove(newPosition);
-//        this.animals.remove(oldPosition);
-//        this.animals.put(oldPosition, animalsOnSquare);
-//        this.animals.put(newPosition, newAnimalsOnSquare);
     }
 
     public Vector2d getDrawLowerLeft() {
@@ -151,11 +153,7 @@ public class GrassField  implements IWorldMap, IPositionChangeObserver {
 
     public boolean place(Animal animal) {
         if (canMoveTo(animal.getPosition())) {
-            List<Animal> animalsListToAdd = this.animals.get(animal.getPosition());
-            if (animalsListToAdd == null){
-                animalsListToAdd = new ArrayList<>();
-                this.animals.put(animal.getPosition(), animalsListToAdd);
-            }
+            List<Animal> animalsListToAdd = this.animals.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>());
             animalsListToAdd.add(animal);
             animal.addObserver(this);
             return true;

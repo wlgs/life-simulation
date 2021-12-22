@@ -23,10 +23,6 @@ public enum MapDirection {
         };
     }
 
-    MapDirection previous() {
-        return this.next().next().next().next().next().next().next(); // please do not insult me for that im just lazy
-    }
-
     Vector2d toUnitVector() {
         return switch (this) {
             case NORTH -> new Vector2d(0, 1);

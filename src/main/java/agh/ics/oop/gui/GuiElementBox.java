@@ -1,8 +1,6 @@
 package agh.ics.oop.gui;
 
-import agh.ics.oop.Animal;
-import agh.ics.oop.Grass;
-import agh.ics.oop.IMapElement;
+import agh.ics.oop.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -20,6 +18,7 @@ public class GuiElementBox {
     Image imageGrass = null;
     Image imageEmpty = null;
     Image imageAnimal = null;
+    Image imageJungle = null;
 
 
     public GuiElementBox() throws FileNotFoundException {
@@ -27,6 +26,7 @@ public class GuiElementBox {
             this.imageGrass = new Image(new FileInputStream("src/main/resources/grass.png"));
             this.imageAnimal = new Image(new FileInputStream("src/main/resources/animal.png"));
             this.imageEmpty = new Image(new FileInputStream("src/main/resources/empty.png"));
+            this.imageJungle = new Image(new FileInputStream("src/main/resources/jungletile.png"));
 
         } catch (FileNotFoundException ex) {
             System.out.println("Couldn't load files -> " + ex);
@@ -34,9 +34,13 @@ public class GuiElementBox {
 
     }
 
-    public VBox mapElementView(IMapElement mapElement) {
+    public StackPane mapElementView(IMapElement mapElement, GrassField map, Vector2d pos) {
         ImageView elementView;
-        ImageView elementViewEmpty = new ImageView(imageEmpty);
+        ImageView elementViewEmpty;
+        if (!map.isJungleTile(pos))
+             elementViewEmpty = new ImageView(imageEmpty);
+        else
+            elementViewEmpty = new ImageView(imageJungle);
         if (mapElement instanceof Animal) {
             elementView = new ImageView(imageAnimal);
             switch (((Animal) mapElement).getDirection()) {
@@ -54,22 +58,15 @@ public class GuiElementBox {
         }
         else{
             elementView = new ImageView(imageEmpty);
+            elementView.setImage(null);
         }
-        elementView.setFitWidth(20);
         elementView.setFitHeight(20);
+        elementView.setFitWidth(20);
         elementViewEmpty.setFitHeight(20);
         elementViewEmpty.setFitWidth(20);
-        VBox elementVBox = new VBox();
-
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(elementViewEmpty, elementView);
-
-        elementVBox.setPadding(new Insets(0,0,0,0));
-//        elementVBox.getChildren().add(elementView);
-        elementVBox.getChildren().add(stackPane);
-        elementVBox.setAlignment(Pos.CENTER);
-        // TODO LET IT RETURN STACKPANE NOT VBOX THATS CRINGE!
-        return elementVBox;
+        return stackPane;
 
     }
 }

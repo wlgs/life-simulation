@@ -72,7 +72,7 @@ public class App extends Application implements IAnimalObserver {
             for (int i = 0; i <= map.getDrawUpperRight().x - map.getDrawLowerLeft().x; i++) {
                 for (int j = 0; j <= map.getDrawUpperRight().y - map.getDrawLowerLeft().y; j++) {
                     Vector2d curMapPos = new Vector2d(map.getDrawLowerLeft().x + i, map.getDrawUpperRight().y - j);
-                    VBox sq = elementCreator.mapElementView((IMapElement) map.objectAt(curMapPos));
+                    StackPane sq = elementCreator.mapElementView((IMapElement) map.objectAt(curMapPos), this.map, curMapPos);
                     mapGrid.add(sq, i + 1, j + 1);
                     GridPane.setHalignment(sq, HPos.CENTER);
 
@@ -199,7 +199,6 @@ public class App extends Application implements IAnimalObserver {
             engine.setMoveDelay(Integer.parseInt(moveDelayTf.getText()));
 
 
-            // TODO: draw map normally without redraw=false/true
             drawMap(false);
 
             Thread engineThread = new Thread(this.engine);

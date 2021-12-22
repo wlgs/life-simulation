@@ -150,9 +150,6 @@ public class SimulationEngine implements IEngine, Runnable {
                 secondAnimal = candidates.get(r.nextInt(candidates.size()));
 
             }
-
-
-            //todo animal method reproduce with?
             Animal childAnimal = new Animal(
                     this.map,
                     posToCheck,
@@ -160,10 +157,9 @@ public class SimulationEngine implements IEngine, Runnable {
                     firstAnimal.getMoveEnergy(),
                     firstAnimal,
                     secondAnimal);
-            firstAnimal.addEnergy((int) (firstAnimal.getEnergy()*(0.25)));
-            secondAnimal.addEnergy((int) (secondAnimal.getEnergy()*(0.25)));
+            firstAnimal.addEnergy((int) (-firstAnimal.getEnergy()*(0.25)));
+            secondAnimal.addEnergy((int) (-secondAnimal.getEnergy()*(0.25)));
             childAnimal.setEnergy((int) (firstAnimal.getEnergy()*(0.25)) + (int) (secondAnimal.getEnergy()*(0.25)));
-
             newAnimals.add(childAnimal);
             alreadyDone.put(posToCheck, true);
 
@@ -174,7 +170,6 @@ public class SimulationEngine implements IEngine, Runnable {
         }
     }
 
-    // calculateEra means play all moves, check if food was eaten and so on
     public void calculateEra(){
         removeDeadAnimals();
         checkFood();

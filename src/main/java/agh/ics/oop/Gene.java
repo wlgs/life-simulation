@@ -27,7 +27,7 @@ public class Gene {
         Random r = new Random();
         for (int i = 0 ; i <32; i++)
             this.genomeArray[i] = r.nextInt(8);
-        Arrays.sort(this.genomeArray); // so we have the sorted one!
+        Arrays.sort(this.genomeArray);
     }
 
     public Gene (Animal a1, Animal a2){

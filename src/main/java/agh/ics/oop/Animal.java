@@ -38,7 +38,8 @@ public class Animal extends AbstractWorldMapElement {
         this.energy = startEnergy;
         this.startEnergy = startEnergy;
         this.moveEnergy = moveEnergy;
-        MapDirection[] directions = {MapDirection.NORTH,
+        MapDirection[] directions = {
+                MapDirection.NORTH,
                 MapDirection.NORTHEAST,
                 MapDirection.EAST,
                 MapDirection.SOUTHEAST,
@@ -59,7 +60,8 @@ public class Animal extends AbstractWorldMapElement {
         this.energy = startEnergy;
         this.startEnergy = startEnergy;
         this.moveEnergy = moveEnergy;
-        MapDirection[] directions = {MapDirection.NORTH,
+        MapDirection[] directions = {
+                MapDirection.NORTH,
                 MapDirection.NORTHEAST,
                 MapDirection.EAST,
                 MapDirection.SOUTHEAST,
