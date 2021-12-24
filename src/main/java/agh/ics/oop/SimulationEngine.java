@@ -27,7 +27,7 @@ public class SimulationEngine implements IEngine, Runnable {
     public SimulationEngine(GrassField map, List<Animal> animalsToAdd) {
         this.animals = new ArrayList<>();
         this.map = map;
-        for (Animal a : animalsToAdd ){
+        for (Animal a : animalsToAdd) {
             if (map.place(a))
                 animals.add(a);
         }
@@ -38,11 +38,11 @@ public class SimulationEngine implements IEngine, Runnable {
     public SimulationEngine(int animalsAmount, int startEnergy, int moveEnergy, GrassField map) {
         this.animals = new ArrayList<>();
         this.map = map;
-        for(int i = 1; i <= animalsAmount; i++){
+        for (int i = 1; i <= animalsAmount; i++) {
             Random r = new Random();
             int randomX = r.nextInt(map.getDrawUpperRight().x);
             int randomY = r.nextInt(map.getDrawUpperRight().y);
-            Animal animalToAdd = new Animal(map, new Vector2d(randomX,randomY), startEnergy, moveEnergy);
+            Animal animalToAdd = new Animal(map, new Vector2d(randomX, randomY), startEnergy, moveEnergy);
             if (map.place(animalToAdd))
                 animals.add(animalToAdd);
         }
@@ -61,28 +61,28 @@ public class SimulationEngine implements IEngine, Runnable {
     }
 
 
-    public void removeDeadAnimals(){
+    public void removeDeadAnimals() {
         List<Animal> deadAnimals = new ArrayList<>();
-        for (Animal a : animals){
-            if (a.getEnergy()>0){
+        for (Animal a : animals) {
+            if (a.getEnergy() > 0) {
                 continue;
             }
             deadAnimals.add(a);
         }
-        for (Animal da : deadAnimals){
+        for (Animal da : deadAnimals) {
             this.animals.remove(da);
             this.map.removeAnimalFromMap(da);
         }
     }
 
-    public void checkFood(){
-        for (Animal a : animals){
-            if( map.getGrassAt(a.getPosition())!=null){
+    public void checkFood() {
+        for (Animal a : animals) {
+            if (map.getGrassAt(a.getPosition()) != null) {
                 Grass g = map.getGrassAt(a.getPosition());
                 List<Animal> bestAnimals = map.getBestAnimals(a.getPosition());
                 int toDivide = bestAnimals.size();
                 int energyValue = g.getEnergyValue();
-                int portion = energyValue/toDivide;
+                int portion = energyValue / toDivide;
                 for (Animal ba : bestAnimals)
                     ba.addEnergy(portion);
                 map.removeGrassFromMap(g);
@@ -94,27 +94,27 @@ public class SimulationEngine implements IEngine, Runnable {
         }
     }
 
-    public void reproduceAnimals(){
+    public void reproduceAnimals() {
         Random r = new Random();
         Map<Vector2d, Boolean> alreadyDone = new LinkedHashMap<>();
         List<Animal> newAnimals = new ArrayList<>();
         List<Animal> healthyAnimals = new ArrayList<>();
         List<Animal> candidates = new ArrayList<>();
-        for (Animal a : animals){
+        for (Animal a : animals) {
 
             Vector2d posToCheck = a.getPosition();
-            if (alreadyDone.get(posToCheck)!=null){
+            if (alreadyDone.get(posToCheck) != null) {
                 continue;
             }
             healthyAnimals.clear();
             int animalsAmount = map.animalsAt(posToCheck).size();
-            if (animalsAmount<2)
+            if (animalsAmount < 2)
                 continue;
-            for (Animal a2 : map.animalsAt(posToCheck)){
-                if (a.getEnergy()> 0.5*a.getStartEnergy())
+            for (Animal a2 : map.animalsAt(posToCheck)) {
+                if (a.getEnergy() > 0.5 * a.getStartEnergy())
                     healthyAnimals.add(a2);
-                }
-            if (healthyAnimals.size()<2)
+            }
+            if (healthyAnimals.size() < 2)
                 continue;
             healthyAnimals.sort(animalComp);
             candidates.clear();
@@ -124,8 +124,8 @@ public class SimulationEngine implements IEngine, Runnable {
 
             // after the loop we have potentially 40
             // or something like that 40, 40, 40, 40
-            for (Animal a2 : healthyAnimals){
-                if (a2.getEnergy()==best_energy)
+            for (Animal a2 : healthyAnimals) {
+                if (a2.getEnergy() == best_energy)
                     candidates.add(a2);
                 break;
             }
@@ -133,12 +133,12 @@ public class SimulationEngine implements IEngine, Runnable {
             Animal secondAnimal;
             // now take second animals that have lower energy than the top one
             // we might get in result something like that: 40, 23, 23, 23
-            if (candidates.size()<2){
+            if (candidates.size() < 2) {
                 candidates.add(healthyAnimals.get(0));
                 healthyAnimals.remove(0);
                 best_energy = candidates.get(1).getEnergy();
-                for (Animal a2 : healthyAnimals){
-                    if (a2.getEnergy()==best_energy)
+                for (Animal a2 : healthyAnimals) {
+                    if (a2.getEnergy() == best_energy)
                         candidates.add(a2);
                     break;
                 }
@@ -146,8 +146,7 @@ public class SimulationEngine implements IEngine, Runnable {
                 firstAnimal = candidates.get(0);
                 candidates.remove(0);
                 secondAnimal = candidates.get(r.nextInt(candidates.size()));
-            }
-            else{
+            } else {
                 int randomNum = r.nextInt(candidates.size());
                 firstAnimal = candidates.get(randomNum);
                 candidates.remove(randomNum);
@@ -161,20 +160,20 @@ public class SimulationEngine implements IEngine, Runnable {
                     firstAnimal.getMoveEnergy(),
                     firstAnimal,
                     secondAnimal);
-            firstAnimal.addEnergy((int) (-firstAnimal.getEnergy()*(0.25)));
-            secondAnimal.addEnergy((int) (-secondAnimal.getEnergy()*(0.25)));
-            childAnimal.setEnergy((int) (firstAnimal.getEnergy()*(0.25)) + (int) (secondAnimal.getEnergy()*(0.25)));
+            firstAnimal.addEnergy((int) (-firstAnimal.getEnergy() * (0.25)));
+            secondAnimal.addEnergy((int) (-secondAnimal.getEnergy() * (0.25)));
+            childAnimal.setEnergy((int) (firstAnimal.getEnergy() * (0.25)) + (int) (secondAnimal.getEnergy() * (0.25)));
             newAnimals.add(childAnimal);
             alreadyDone.put(posToCheck, true);
 
         }
-        for (Animal na : newAnimals){
+        for (Animal na : newAnimals) {
             map.place(na);
             animals.add(na);
         }
     }
 
-    public void spawnGrass(){
+    public void spawnGrass() {
         if (this.map.canSpawnMoreGrassInJungle())
             this.map.spawnGrassInJungle();
         if (this.map.canSpawnMoreGrassOutsideJungle())
@@ -182,28 +181,28 @@ public class SimulationEngine implements IEngine, Runnable {
     }
 
 
-    public void calculateEra(){
+    public void calculateEra() {
         removeDeadAnimals();
         checkFood();
         reproduceAnimals();
         spawnGrass();
     }
 
-    public void startEngine(){
-        this.running=true;
+    public void startEngine() {
+        this.running = true;
     }
 
-    public void stopEngine(){
-        this.running=false;
+    public void stopEngine() {
+        this.running = false;
     }
 
-    public int countAnimals(){
+    public int countAnimals() {
         return this.animals.size();
     }
 
     @Override
     public void run() {
-        while (true){
+        while (true) {
 
             System.out.println("waiting to run");
             try {
@@ -212,7 +211,7 @@ public class SimulationEngine implements IEngine, Runnable {
                 System.out.println("Interrupted -> " + ex);
             }
 
-            while (running){
+            while (running) {
                 for (Animal a : animals)
                     a.move();
 

@@ -40,7 +40,7 @@ public class GuiElementBox {
         ImageView elementView;
         ImageView elementViewEmpty;
         if (!map.isJungleTile(pos))
-             elementViewEmpty = new ImageView(imageEmpty);
+            elementViewEmpty = new ImageView(imageEmpty);
         else
             elementViewEmpty = new ImageView(imageJungle);
         if (mapElement instanceof Animal a) {
@@ -54,23 +54,23 @@ public class GuiElementBox {
                 case SOUTHWEST -> elementView.setRotate(elementView.getRotate() + 225);
                 case NORTHWEST -> elementView.setRotate(elementView.getRotate() + 315);
                 case NORTHEAST -> elementView.setRotate(elementView.getRotate() + 45);
-            };
-            if (a.getEnergy()<0.25*a.getStartEnergy())
-                elementView.setEffect(new ColorAdjust(-1,0,0,0));
-            else if (a.getEnergy()<0.5*a.getStartEnergy())
-                elementView.setEffect(new ColorAdjust(-0.6,0,0,0));
-            else if (a.getEnergy()<0.75*a.getStartEnergy())
-                elementView.setEffect(new ColorAdjust(-0.2,0,0,0));
-            else if(a.getEnergy()<1.25*a.getStartEnergy() && a.getEnergy()>a.getStartEnergy())
-                elementView.setEffect(new ColorAdjust(0.2,0,0,0));
-            else if(a.getEnergy()<1.5*a.getStartEnergy() && a.getEnergy()>a.getStartEnergy())
-                elementView.setEffect(new ColorAdjust(0.4,0,0,0));
-            else if(a.getEnergy()<1.75*a.getStartEnergy() && a.getEnergy()>a.getStartEnergy())
-                elementView.setEffect(new ColorAdjust(0.6,0,0,0));
-        } else if (mapElement instanceof Grass){
+            }
+            ;
+            if (a.getEnergy() < 0.25 * a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(-1, 0, 0, 0));
+            else if (a.getEnergy() < 0.5 * a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(-0.6, 0, 0, 0));
+            else if (a.getEnergy() < 0.75 * a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(-0.2, 0, 0, 0));
+            else if (a.getEnergy() < 1.25 * a.getStartEnergy() && a.getEnergy() > a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(0.2, 0, 0, 0));
+            else if (a.getEnergy() < 1.5 * a.getStartEnergy() && a.getEnergy() > a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(0.4, 0, 0, 0));
+            else if (a.getEnergy() < 1.75 * a.getStartEnergy() && a.getEnergy() > a.getStartEnergy())
+                elementView.setEffect(new ColorAdjust(0.6, 0, 0, 0));
+        } else if (mapElement instanceof Grass) {
             elementView = new ImageView(imageGrass);
-        }
-        else{
+        } else {
             elementView = new ImageView(imageEmpty);
             elementView.setImage(null);
         }

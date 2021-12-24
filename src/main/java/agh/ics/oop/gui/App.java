@@ -96,23 +96,23 @@ public class App extends Application implements IAnimalObserver {
     public void start(Stage primaryStage) throws Exception {
 
         Label title = new Label("Life Simulation");
-        title.setFont(new Font("Helvetica",32));
+        title.setFont(new Font("Helvetica", 32));
         title.setAlignment(Pos.BASELINE_RIGHT);
         title.setTextAlignment(TextAlignment.CENTER);
-        title.setPadding(new Insets(10,10,10,10));
+        title.setPadding(new Insets(10, 10, 10, 10));
 
         Label info1 = new Label("Enter your parameters:");
         info1.setFont(new Font("Helvetica", 16));
         info1.setAlignment(Pos.CENTER_RIGHT);
 
         Button setParamsButton = new Button("Set parameters");
-        setParamsButton.setPadding(new Insets(10,10,10,10));
+        setParamsButton.setPadding(new Insets(10, 10, 10, 10));
 
         Button startButton = new Button("Start");
         Button stopButton = new Button("Stop");
 
-        startButton.setPadding(new Insets(20,30,20,30));
-        stopButton.setPadding(new Insets(20,30,20,30));
+        startButton.setPadding(new Insets(20, 30, 20, 30));
+        stopButton.setPadding(new Insets(20, 30, 20, 30));
 
         // <<- INPUT AND LABELS START ->>
         TextField mapWidthTf = new TextField("20");
@@ -156,18 +156,18 @@ public class App extends Application implements IAnimalObserver {
         var7.setAlignment(Pos.BASELINE_RIGHT);
         var8.setAlignment(Pos.BASELINE_RIGHT);
         // <<- INPUT AND LABELS END ->>
-        VBox inputBox = new VBox(info1,var1,var2,var3,var4,var5,var6,var7,var8,setParamsButton);
+        VBox inputBox = new VBox(info1, var1, var2, var3, var4, var5, var6, var7, var8, setParamsButton);
         inputBox.setAlignment(Pos.BASELINE_RIGHT);
-        HBox startStopButtons = new HBox(startButton,stopButton);
-        VBox entryScreenBox = new VBox(title,inputBox, startStopButtons);
+        HBox startStopButtons = new HBox(startButton, stopButton);
+        VBox entryScreenBox = new VBox(title, inputBox, startStopButtons);
 
-        entryScreenBox.setPadding(new Insets(30,30,30,30));
+        entryScreenBox.setPadding(new Insets(30, 30, 30, 30));
         entryScreenBox.setMaxWidth(300);
 
 
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
-        final LineChart<Number,Number> lineChart = new LineChart<>(xAxis, yAxis);
+        final LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setTitle("Total animals per Era");
         this.animalsChartSeries.setName("Era");
         lineChart.getData().add(this.animalsChartSeries);
@@ -183,8 +183,6 @@ public class App extends Application implements IAnimalObserver {
         Scene scene = new Scene(appBox, 300, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
 
 
         startButton.setOnAction(ev -> {
@@ -233,7 +231,6 @@ public class App extends Application implements IAnimalObserver {
             this.animalsChartSeries.getData().add(new XYChart.Data(this.eraCount, this.engine.countAnimals()));
 
             // TODO: complete other charts!!
-
 
 
         });

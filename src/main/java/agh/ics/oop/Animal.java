@@ -72,7 +72,7 @@ public class Animal extends AbstractWorldMapElement {
         Random r = new Random();
         this.direction = directions[r.nextInt(8)];
         this.observers = new ArrayList<>();
-        this.genome = new Gene(parent1,parent2);
+        this.genome = new Gene(parent1, parent2);
     }
 
 
@@ -80,20 +80,20 @@ public class Animal extends AbstractWorldMapElement {
         return this.direction;
     }
 
-    public void rotate(int times){
-        for (int i =1; i<=times; i++)
+    public void rotate(int times) {
+        for (int i = 1; i <= times; i++)
             this.direction = this.direction.next();
     }
 
     public void move() {
         int randomMove = genome.getRotationMove();
         this.addEnergy(-this.moveEnergy);
-        if (randomMove !=0 && randomMove != 4){
+        if (randomMove != 0 && randomMove != 4) {
             rotate(genome.getRotationMove());
             return;
         }
         Vector2d movementChange = this.direction.toUnitVector();
-        if(randomMove == 4)
+        if (randomMove == 4)
             movementChange = movementChange.opposite();
         Vector2d newPos = this.position.add(movementChange);
         if (map.canMoveTo(newPos))
@@ -108,23 +108,27 @@ public class Animal extends AbstractWorldMapElement {
         this.position = newPos;
     }
 
-    public int getEnergy(){
+    public int getEnergy() {
         return this.energy;
     }
 
-    public void addEnergy(int val){
+    public void addEnergy(int val) {
         this.energy += val;
     }
 
-    public int getStartEnergy(){
+    public int getStartEnergy() {
         return this.startEnergy;
     }
 
-    public void setEnergy(int val) { this.energy = val;}
+    public void setEnergy(int val) {
+        this.energy = val;
+    }
 
-    public int getMoveEnergy(){ return this.moveEnergy;}
+    public int getMoveEnergy() {
+        return this.moveEnergy;
+    }
 
-    public Gene getAnimalGene(){
+    public Gene getAnimalGene() {
         return genome;
     }
 

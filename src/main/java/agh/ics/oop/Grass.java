@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Grass extends AbstractWorldMapElement {
     private final int energyValue;
+
     public Grass(Vector2d pos, int plantEnergy) {
         super(pos);
         this.energyValue = plantEnergy;
@@ -14,7 +15,7 @@ public class Grass extends AbstractWorldMapElement {
         return "*";
     }
 
-    public int getEnergyValue(){
+    public int getEnergyValue() {
         return energyValue;
     }
 }
