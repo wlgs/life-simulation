@@ -9,7 +9,6 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
     private Map<Vector2d, List<Animal>> animals = new LinkedHashMap<>();
     private final Vector2d mapBorderTR;
     private final Vector2d mapBorderBL;
-    private final boolean foldable = false;
     private final int plantEnergy;
     private final float jungleRatio;
     private final Vector2d jungleBorderTR;
@@ -20,6 +19,8 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
     private int totalGrassInJungle = 0;
     private int totalGrassOutsideJungle = 0;
     private Random r = new Random();
+
+    public final boolean foldable = false;
 
 
     public GrassField(int amount) {
@@ -55,12 +56,6 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
         int diffY = this.mapBorderTR.y + 1 - jungleSize;
         this.jungleBorderTR = new Vector2d((int) Math.ceil(this.mapBorderTR.x - diffX / 2.0), (int) Math.ceil(this.mapBorderTR.y - diffY / 2.0));
         this.jungleBorderBL = new Vector2d((int) Math.ceil(this.mapBorderBL.x + diffX / 2.0), (int) Math.ceil(this.mapBorderBL.y + diffY / 2.0));
-//        System.out.println(this.jungleBorderBL);
-//        System.out.println(this.jungleBorderTR);
-//        System.out.println(jungleSize);
-//        System.out.println(diffX);
-//        System.out.println(diffY);
-
     }
 
     public void substractTotalGrassInJungle(int v) {
