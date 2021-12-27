@@ -208,7 +208,8 @@ public class App extends Application implements IAnimalObserver {
 
             Thread engineThread = new Thread(this.engine);
             engineThread.start();
-
+            primaryStage.setWidth(1200);
+            primaryStage.setHeight(700);
             entryScreenBox.setVisible(false);
             entryScreenBox.setManaged(false);
             simulationScreenBox.setVisible(true);
