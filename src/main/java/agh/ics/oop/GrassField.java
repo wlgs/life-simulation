@@ -6,11 +6,10 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
     private final Map<Vector2d, Grass> grasses = new LinkedHashMap<>();
     private final int maxSpawnRange;
     private final int minSpawnRange;
-    private Map<Vector2d, List<Animal>> animals = new LinkedHashMap<>();
+    private final Map<Vector2d, List<Animal>> animals = new LinkedHashMap<>();
     private final Vector2d mapBorderTR;
     private final Vector2d mapBorderBL;
     private final int plantEnergy;
-    private final float jungleRatio;
     private final Vector2d jungleBorderTR;
     private final Vector2d jungleBorderBL;
     private final int jungleSize;
@@ -19,7 +18,7 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
     private int totalGrassInJungle = 0;
     private int totalGrassOutsideJungle = 0;
     private int magicLeft = 3;
-    private Random r = new Random();
+    private final Random r = new Random();
 
     private final boolean foldable;
     private final boolean magicable;
@@ -35,7 +34,6 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
         this.maxSpawnRange = (int) Math.sqrt(amount * 10);
         this.minSpawnRange = 0;
         this.plantEnergy = 10;
-        this.jungleRatio = 0;
         this.jungleSize = 0;
         this.jungleBorderBL = new Vector2d(0, 0);
         this.jungleBorderTR = new Vector2d(0, 0);
@@ -56,7 +54,6 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
         this.mapBorderBL = new Vector2d(0, 0);
         this.mapBorderTR = new Vector2d(mapWidth - 1, mapHeight - 1);
         this.plantEnergy = plantEnergy;
-        this.jungleRatio = jungleRatio;
         this.jungleSize = (int) ((Math.sqrt(jungleRatio)) * (this.mapBorderTR.x + 1));
         int diffX = this.mapBorderTR.x + 1 - jungleSize;
         int diffY = this.mapBorderTR.y + 1 - jungleSize;
@@ -64,11 +61,11 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
         this.jungleBorderBL = new Vector2d((int) Math.ceil(this.mapBorderBL.x + diffX / 2.0), (int) Math.ceil(this.mapBorderBL.y + diffY / 2.0));
     }
 
-    public void substractTotalGrassInJungle(int v) {
+    public void subtractTotalGrassInJungle(int v) {
         this.totalGrassInJungle -= v;
     }
 
-    public void substractTotalGrassOutsideJungle(int v) {
+    public void subtractTotalGrassOutsideJungle(int v) {
         this.totalGrassOutsideJungle -= v;
     }
 
@@ -79,8 +76,9 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
     public boolean canSpawnMoreGrassOutsideJungle() {
         return this.totalGrassOutsideJungle < (this.mapWidth * this.mapHeight) - (this.jungleSize * this.jungleSize);
     }
-    public int getTotalGrassAmount(){
-        return this.totalGrassInJungle+this.totalGrassOutsideJungle;
+
+    public int getTotalGrassAmount() {
+        return this.totalGrassInJungle + this.totalGrassOutsideJungle;
     }
 
     public void spawnGrassInJungle() {
@@ -167,13 +165,11 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
         return false;
     }
 
-    public boolean spawnGrassAt(Vector2d position) {
+    public void spawnGrassAt(Vector2d position) {
         if (objectAt(position) == null) {
             Grass grassToAdd = new Grass(position, plantEnergy);
             grasses.put(grassToAdd.getPosition(), grassToAdd);
-            return true;
         }
-        return false;
     }
 
     public void removeAnimalFromMap(Animal a) {
@@ -208,20 +204,20 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
         return position.precedes(this.mapBorderBL) && position.follows(this.mapBorderTR);
     }
 
-    public boolean isOutOfMap(Vector2d position){
+    public boolean isOutOfMap(Vector2d position) {
         return position.follows(this.mapBorderBL) || position.precedes(this.mapBorderBL);
     }
 
-    public boolean isMapFoldable(){
+    public boolean isMapFoldable() {
         return this.foldable;
     }
 
-    public boolean canMagicHappen(){
-        return this.magicable && this.magicLeft>0;
+    public boolean canMagicHappen() {
+        return this.magicable && this.magicLeft > 0;
     }
 
-    public void magicHappened(){
-        this.magicLeft-=1;
+    public void magicHappened() {
+        this.magicLeft -= 1;
     }
 
     public boolean place(Animal animal) {

@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Animal extends AbstractWorldMapElement {
     private MapDirection direction = MapDirection.NORTHWEST;
-    private GrassField map;
+    private final GrassField map;
     private int energy;
     private final int moveEnergy;
     private final int startEnergy;

@@ -88,9 +88,9 @@ public class SimulationEngine implements IEngine, Runnable {
                     ba.addEnergy(portion);
                 map.removeGrassFromMap(g);
                 if (map.isJungleTile(g.getPosition()))
-                    map.substractTotalGrassInJungle(1);
+                    map.subtractTotalGrassInJungle(1);
                 else
-                    map.substractTotalGrassOutsideJungle(1);
+                    map.subtractTotalGrassOutsideJungle(1);
             }
         }
     }

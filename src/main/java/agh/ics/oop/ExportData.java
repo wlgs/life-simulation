@@ -17,15 +17,14 @@ public class ExportData {
 
         int dataLength = chartSeriesArr.get(0).getData().size();
 
-        for(int i = 0; i < dataLength; i++){
+        for (int i = 0; i < dataLength; i++) {
             String toPrint = i + 1 + ",";
-            for (XYChart.Series series : chartSeriesArr){
+            for (XYChart.Series<Number, Number> series : chartSeriesArr) {
                 toPrint += series.getData().get(i).toString().split(",")[1];
                 toPrint += ",";
             }
-            toPrint = toPrint.substring(0,toPrint.length()-1);
+            toPrint = toPrint.substring(0, toPrint.length() - 1);
             printWriter.print(toPrint + "\r\n");
-
 
 
         }
