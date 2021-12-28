@@ -365,7 +365,7 @@ public class App extends Application implements IAnimalObserver {
         Platform.runLater(() -> {
             System.out.println("magic has happened");
             Alert alertFolded = new Alert(Alert.AlertType.INFORMATION, "Magic has happened on left map [folded]!");
-            Alert alertNotFolded = new Alert(Alert.AlertType.INFORMATION, "Magic has happened on right map [not folded]!");
+            Alert alertNotFolded = new Alert(Alert.AlertType.INFORMATION, "Magic has happened on right map [regular]!");
             if (folded)
                 alertFolded.show();
             else
