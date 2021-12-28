@@ -101,14 +101,14 @@ public class App extends Application implements IAnimalObserver {
         stopButton.setPadding(new Insets(20, 30, 20, 30));
 
         // <<- INPUT AND LABELS START ->>
-        TextField mapWidthTf = new TextField("20");
+        TextField mapWidthTf = new TextField("25");
         TextField mapHeightTf = new TextField("20");
-        TextField animalsAmountTf = new TextField("20");
-        TextField startEnergyTf = new TextField("20");
-        TextField moveEnergyTf = new TextField("1");
-        TextField plantEnergyTf = new TextField("20");
-        TextField jungleRatioTf = new TextField("0.5");
-        TextField moveDelayTf = new TextField("200");
+        TextField animalsAmountTf = new TextField("40");
+        TextField startEnergyTf = new TextField("60");
+        TextField moveEnergyTf = new TextField("2");
+        TextField plantEnergyTf = new TextField("60");
+        TextField jungleRatioTf = new TextField("0.1");
+        TextField moveDelayTf = new TextField("100");
         mapWidthTf.setMaxWidth(60);
         mapHeightTf.setMaxWidth(60);
         animalsAmountTf.setMaxWidth(60);
@@ -199,17 +199,22 @@ public class App extends Application implements IAnimalObserver {
         HBox dataBox = new HBox(lineChartW1, lineChartW2);
         Label map1Title = new Label("World 1. [Folded]");
         Label map2Title = new Label("World 1. [Not folded]");
+        map1Title.setAlignment(Pos.CENTER);
+        map2Title.setAlignment(Pos.CENTER);
         map1Title.setFont(new Font("Helvetica", 26));
         map2Title.setFont(new Font("Helvetica", 26));
         VBox map1Box = new VBox(map1Title, this.mapGrid1);
         VBox map2Box = new VBox(map2Title, this.mapGrid2);
         HBox mapBox = new HBox(map1Box, map2Box);
+        mapBox.setAlignment(Pos.CENTER);
+        dataBox.setAlignment(Pos.CENTER);
+        startStopButtons.setAlignment(Pos.CENTER);
         VBox simulationScreenBox = new VBox(mapBox, dataBox, startStopButtons);
         simulationScreenBox.setVisible(false);
 
         VBox appBox = new VBox(entryScreenBox, simulationScreenBox);
-
-        Scene scene = new Scene(appBox, 1200, 800);
+        appBox.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(appBox, 1200, 900);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -260,7 +265,7 @@ public class App extends Application implements IAnimalObserver {
             engine1Thread.start();
             engine2Thread.start();
             primaryStage.setWidth(1200);
-            primaryStage.setHeight(800);
+            primaryStage.setHeight(900);
             entryScreenBox.setVisible(false);
             entryScreenBox.setManaged(false);
             simulationScreenBox.setVisible(true);
