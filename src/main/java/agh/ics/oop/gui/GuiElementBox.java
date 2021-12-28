@@ -1,17 +1,10 @@
 package agh.ics.oop.gui;
 
 import agh.ics.oop.*;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -76,8 +69,6 @@ public class GuiElementBox {
         }
         elementView.setFitHeight(20);
         elementView.setFitWidth(20);
-
-
         elementViewEmpty.setFitHeight(20);
         elementViewEmpty.setFitWidth(20);
         StackPane stackPane = new StackPane();

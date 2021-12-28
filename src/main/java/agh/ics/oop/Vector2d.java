@@ -1,7 +1,6 @@
 package agh.ics.oop;
 
 import java.util.Objects;
-import java.util.Vector;
 
 public class Vector2d {
     public int x;

@@ -35,7 +35,7 @@ public class Gene {
     }
 
     public Gene(Animal a1, Animal a2) {
-        //a1 is the stronger animal (!)
+        // a1 is the stronger animal (!)
         // firstly we choose the side
         int[] gArr1 = a1.getAnimalGene().getGenomeArray();
         int[] gArr2 = a2.getAnimalGene().getGenomeArray();
@@ -57,7 +57,7 @@ public class Gene {
             }
 
         }
-        //right side
+        // right side
         else {
             whereToCut = 32 - whereToCut;
 

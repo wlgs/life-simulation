@@ -257,7 +257,7 @@ public class App extends Application implements IAnimalObserver {
 
         VBox appBox = new VBox(entryScreenBox, simulationScreenBox);
         appBox.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(appBox, 1300, 1000);
+        Scene scene = new Scene(appBox, 1280, 960);
         primaryStage.getIcons().add(new Image(new FileInputStream("src/main/resources/animal.png")));
         primaryStage.setTitle("Life simulation");
         primaryStage.setScene(scene);
@@ -370,7 +370,6 @@ public class App extends Application implements IAnimalObserver {
                 alertFolded.show();
             else
                 alertNotFolded.show();
-
         });
     }
 
