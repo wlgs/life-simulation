@@ -10,7 +10,7 @@
 
 ## What is the Life Simulation about?
 
-Life simulation is a program written in java that was a final project for our Object Oriented Programming Course at AGH UST. We had to implement some Darwin Life's rules into RNG generated animals that want to just reproduce, eat and survive the next day.
+Life simulation is a program written in Java that was a final project for our Object Oriented Programming Course at AGH UST. We had to implement some Darwin Life's rules into RNG generated world with animals that want to just reproduce, eat and survive the next day.
 <br>
 Full project information (and its requirements) can be seen [here](https://github.com/apohllo/obiektowe-lab/tree/master/proj1).
 
@@ -40,14 +40,14 @@ Full project information (and its requirements) can be seen [here](https://githu
 ## Screenshots
 
 <p align="center">
-  <img src="screenshots/mainmenu.jpg" alt="Screenshot of the game">
+  <img src="screenshots/mainmenu.jpg" alt="screenshot of main menu of the app">
     <p align="center">
     Main menu, the first thing you see when starting the application.
         </p>
 </p>
 
 <p align="center">
-  <img src="screenshots/runninggame.jpg" alt="Screenshot of the game">
+  <img src="screenshots/runninggame.jpg" alt="screenshot of application running">
       <p align="center">
     Application running and recording all the statistics, which you can export later on to a .csv file.
     </p>
