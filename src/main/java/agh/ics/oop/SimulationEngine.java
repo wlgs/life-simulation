@@ -3,10 +3,12 @@ package agh.ics.oop;
 import agh.ics.oop.gui.App;
 import agh.ics.oop.gui.IAnimalObserver;
 
+import java.sql.Array;
 import java.util.*;
 
 public class SimulationEngine implements IEngine, Runnable {
     private List<Animal> animals;
+    private List<Animal> deadAnimals = new ArrayList<>();
     private List<IAnimalObserver> observers = new ArrayList<IAnimalObserver>();
     Comparator<Animal> animalComp = new AnimalsComparator();
     private int moveDelay = 300;
@@ -72,6 +74,7 @@ public class SimulationEngine implements IEngine, Runnable {
         for (Animal da : deadAnimals) {
             this.animals.remove(da);
             this.map.removeAnimalFromMap(da);
+            this.deadAnimals.add(da);
         }
     }
 
@@ -161,6 +164,8 @@ public class SimulationEngine implements IEngine, Runnable {
                     firstAnimal,
                     secondAnimal);
             firstAnimal.addEnergy((int) (-firstAnimal.getEnergy() * (0.25)));
+            firstAnimal.hasNewKid();
+            secondAnimal.hasNewKid();
             secondAnimal.addEnergy((int) (-secondAnimal.getEnergy() * (0.25)));
             childAnimal.setEnergy((int) (firstAnimal.getEnergy() * (0.25)) + (int) (secondAnimal.getEnergy() * (0.25)));
             newAnimals.add(childAnimal);
@@ -180,12 +185,19 @@ public class SimulationEngine implements IEngine, Runnable {
             this.map.spawnGrassOutsideJungle();
     }
 
+    public void countLifeSpan(){
+        for (Animal a : animals) {
+            a.survivedEra();
+        }
+    }
+
 
     public void calculateEra() {
         removeDeadAnimals();
         checkFood();
         reproduceAnimals();
         spawnGrass();
+        countLifeSpan();
     }
 
     public void startEngine() {
@@ -200,11 +212,37 @@ public class SimulationEngine implements IEngine, Runnable {
         return this.animals.size();
     }
 
+    public double getAvgEnergy(){
+        int sum = 0;
+        for (Animal a : this.animals){
+            sum += a.getEnergy();
+        }
+        return (sum*1.0)/this.countAnimals();
+    }
+
+    public double getAvgChildrenAmount(){
+        int sum = 0;
+        for (Animal a : this.animals){
+            sum += a.getChildrenAmount();
+        }
+        return (sum*1.0)/this.countAnimals();
+    }
+
+    public double getAvgLifeSpan(){
+        int sum = 0;
+        for (Animal a : this.deadAnimals){
+            sum += a.getLifeSpan();
+        }
+        if(this.deadAnimals.size()>0)
+            return (sum*1.0)/this.deadAnimals.size();
+        else
+            return 0;
+    }
+
+
     @Override
     public void run() {
         while (true) {
-
-            System.out.println("waiting to run");
             try {
                 Thread.sleep(250);
             } catch (InterruptedException ex) {

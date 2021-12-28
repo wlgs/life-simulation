@@ -75,6 +75,9 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
     public boolean canSpawnMoreGrassOutsideJungle() {
         return this.totalGrassOutsideJungle < (this.mapWidth * this.mapHeight) - (this.jungleSize * this.jungleSize);
     }
+    public int getTotalGrassAmount(){
+        return this.totalGrassInJungle+this.totalGrassOutsideJungle;
+    }
 
     public void spawnGrassInJungle() {
         Vector2d randomPos;

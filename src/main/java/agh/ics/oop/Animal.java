@@ -11,6 +11,8 @@ public class Animal extends AbstractWorldMapElement {
     private final int moveEnergy;
     private final int startEnergy;
     private final Gene genome;
+    private int childrenAmount = 0;
+    private int lifeSpan = 0;
 
     public Animal(IWorldMap map, Vector2d initialPosition) {
         super(initialPosition);
@@ -144,6 +146,22 @@ public class Animal extends AbstractWorldMapElement {
 
     public Gene getAnimalGene() {
         return genome;
+    }
+
+    public void hasNewKid(){
+        this.childrenAmount+=1;
+    }
+
+    public void survivedEra(){
+        this.lifeSpan+=1;
+    }
+
+    public int getChildrenAmount(){
+        return this.childrenAmount;
+    }
+
+    public int getLifeSpan(){
+        return this.lifeSpan;
     }
 
 
