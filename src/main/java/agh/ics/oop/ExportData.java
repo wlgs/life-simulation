@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class ExportData {
 
-    public void exportDataFromChartSeries(ArrayList<XYChart.Series> chartSeriesArr, String filename)
+    public void exportDataFromChartSeries(ArrayList<XYChart.Series<Number, Number>> chartSeriesArr, String filename)
             throws IOException {
         FileWriter fileWriter = new FileWriter(filename);
         PrintWriter printWriter = new PrintWriter(fileWriter);

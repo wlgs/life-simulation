@@ -29,29 +29,29 @@ import java.util.ArrayList;
 public class App extends Application implements IAnimalObserver {
 
 
-    private GridPane mapGrid1 = new GridPane();
-    private GridPane mapGrid2 = new GridPane();
+    private final GridPane mapGrid1 = new GridPane();
+    private final GridPane mapGrid2 = new GridPane();
     private SimulationEngine engine1;
     private SimulationEngine engine2;
     private GrassField map1;
     private GrassField map2;
-    private ExportData exportData = new ExportData();
+    private final ExportData exportData = new ExportData();
     private int eraCount = 0;
 
-    private XYChart.Series animalsChartSeriesW1 = new XYChart.Series();
-    private XYChart.Series plantsChartSeriesW1 = new XYChart.Series();
-    private XYChart.Series avgEnergyChartSeriesW1 = new XYChart.Series();
-    private XYChart.Series avgKidsChartSeriesW1 = new XYChart.Series();
-    private XYChart.Series avgLifeSpanChartSeriesW1 = new XYChart.Series();
-    private ArrayList<XYChart.Series> chartSeriesArrW1;
+    private final XYChart.Series<Number, Number> animalsChartSeriesW1 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> plantsChartSeriesW1 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> avgEnergyChartSeriesW1 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> avgKidsChartSeriesW1 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> avgLifeSpanChartSeriesW1 = new XYChart.Series<>();
+    private ArrayList<XYChart.Series<Number, Number>> chartSeriesArrW1;
 
 
-    private XYChart.Series animalsChartSeriesW2 = new XYChart.Series();
-    private XYChart.Series plantsChartSeriesW2 = new XYChart.Series();
-    private XYChart.Series avgEnergyChartSeriesW2 = new XYChart.Series();
-    private XYChart.Series avgKidsChartSeriesW2 = new XYChart.Series();
-    private XYChart.Series avgLifeSpanChartSeriesW2 = new XYChart.Series();
-    private ArrayList<XYChart.Series> chartSeriesArrW2;
+    private final XYChart.Series<Number, Number> animalsChartSeriesW2 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> plantsChartSeriesW2 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> avgEnergyChartSeriesW2 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> avgKidsChartSeriesW2 = new XYChart.Series<>();
+    private final XYChart.Series<Number, Number> avgLifeSpanChartSeriesW2 = new XYChart.Series<>();
+    private ArrayList<XYChart.Series<Number, Number>> chartSeriesArrW2;
 
     public void init() {
     }
@@ -198,7 +198,7 @@ public class App extends Application implements IAnimalObserver {
         lineChartW1.getData().add(this.avgKidsChartSeriesW1);
         lineChartW1.getData().add(this.avgLifeSpanChartSeriesW1);
 
-        this.chartSeriesArrW1 = new ArrayList<XYChart.Series>() {
+        this.chartSeriesArrW1 = new ArrayList<>() {
             {
                 add(animalsChartSeriesW1);
                 add(plantsChartSeriesW1);
@@ -227,7 +227,7 @@ public class App extends Application implements IAnimalObserver {
         lineChartW2.getData().add(this.avgKidsChartSeriesW2);
         lineChartW2.getData().add(this.avgLifeSpanChartSeriesW2);
 
-        this.chartSeriesArrW2 = new ArrayList<XYChart.Series>() {
+        this.chartSeriesArrW2 = new ArrayList<>() {
             {
                 add(animalsChartSeriesW2);
                 add(plantsChartSeriesW2);
@@ -347,17 +347,17 @@ public class App extends Application implements IAnimalObserver {
 
             this.eraCount++;
 
-            this.animalsChartSeriesW1.getData().add(new XYChart.Data(this.eraCount, this.engine1.countAnimals()));
-            this.plantsChartSeriesW1.getData().add(new XYChart.Data(this.eraCount, this.map1.getTotalGrassAmount()));
-            this.avgEnergyChartSeriesW1.getData().add(new XYChart.Data(this.eraCount, this.engine1.getAvgEnergy()));
-            this.avgKidsChartSeriesW1.getData().add(new XYChart.Data(this.eraCount, this.engine1.getAvgChildrenAmount()));
-            this.avgLifeSpanChartSeriesW1.getData().add(new XYChart.Data(this.eraCount, this.engine1.getAvgLifeSpan()));
+            this.animalsChartSeriesW1.getData().add(new XYChart.Data<>(this.eraCount, this.engine1.countAnimals()));
+            this.plantsChartSeriesW1.getData().add(new XYChart.Data<>(this.eraCount, this.map1.getTotalGrassAmount()));
+            this.avgEnergyChartSeriesW1.getData().add(new XYChart.Data<>(this.eraCount, this.engine1.getAvgEnergy()));
+            this.avgKidsChartSeriesW1.getData().add(new XYChart.Data<>(this.eraCount, this.engine1.getAvgChildrenAmount()));
+            this.avgLifeSpanChartSeriesW1.getData().add(new XYChart.Data<>(this.eraCount, this.engine1.getAvgLifeSpan()));
 
-            this.animalsChartSeriesW2.getData().add(new XYChart.Data(this.eraCount, this.engine2.countAnimals()));
-            this.plantsChartSeriesW2.getData().add(new XYChart.Data(this.eraCount, this.map2.getTotalGrassAmount()));
-            this.avgEnergyChartSeriesW2.getData().add(new XYChart.Data(this.eraCount, this.engine2.getAvgEnergy()));
-            this.avgKidsChartSeriesW2.getData().add(new XYChart.Data(this.eraCount, this.engine2.getAvgChildrenAmount()));
-            this.avgLifeSpanChartSeriesW2.getData().add(new XYChart.Data(this.eraCount, this.engine2.getAvgLifeSpan()));
+            this.animalsChartSeriesW2.getData().add(new XYChart.Data<>(this.eraCount, this.engine2.countAnimals()));
+            this.plantsChartSeriesW2.getData().add(new XYChart.Data<>(this.eraCount, this.map2.getTotalGrassAmount()));
+            this.avgEnergyChartSeriesW2.getData().add(new XYChart.Data<>(this.eraCount, this.engine2.getAvgEnergy()));
+            this.avgKidsChartSeriesW2.getData().add(new XYChart.Data<>(this.eraCount, this.engine2.getAvgChildrenAmount()));
+            this.avgLifeSpanChartSeriesW2.getData().add(new XYChart.Data<>(this.eraCount, this.engine2.getAvgLifeSpan()));
         });
     }
 

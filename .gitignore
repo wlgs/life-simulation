@@ -1,5 +1,5 @@
 .idea
-.csv
+*.csv
 .gradle
 **/build/
 !src/**/build/
