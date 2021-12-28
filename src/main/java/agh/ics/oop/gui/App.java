@@ -13,12 +13,14 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 
@@ -124,7 +126,7 @@ public class App extends Application implements IAnimalObserver {
         Label moveEnergy = new Label("Move energy: ");
         Label plantEnergy = new Label("Plant energy: ");
         Label jungleRatio = new Label("Jungle ratio: ");
-        Label moveDelay = new Label("Movement delay [ms]: ");
+        Label moveDelay = new Label("Render delay [ms]: ");
         HBox var1 = new HBox(mapWidth, mapWidthTf);
         HBox var2 = new HBox(mapHeight, mapHeightTf);
         HBox var3 = new HBox(animalsAmount, animalsAmountTf);
@@ -149,13 +151,23 @@ public class App extends Application implements IAnimalObserver {
         inputBox.setAlignment(Pos.BASELINE_RIGHT);
         // <<- INPUT AND LABELS END ->>
 
+        Label guideTitle = new Label("Guide to Life Simulation");
+        Label guideInfo1 = new Label("1. Animals turn green when they overeat.");
+        Label guideInfo2 = new Label("2. Animals turn blue when they are about to die.");
+        Label guideInfo3 = new Label("3. Animals can reproduce if they are strong enough.");
+        Label guideInfo4 = new Label("4. Reproduced animals act similarly to his parents.");
+        Label guideInfo5 = new Label("5. Magic is cloning 5 animals, when there are 5 animals left.");
+        Label guideInfo6 = new Label("6. Magic can only happen 3 times.");
+        Label guideInfo7 = new Label("7. Be respectful about your machine possibilities when setting up parameters.");
+
+        VBox guideBox = new VBox(guideTitle,guideInfo1,guideInfo2,guideInfo3,guideInfo4,guideInfo5,guideInfo6, guideInfo7);
 
 
         HBox startStopButtons = new HBox(startButton, stopButton);
-        VBox entryScreenBox = new VBox(title, inputBox, startStopButtons);
+        VBox entryScreenBox = new VBox(title, inputBox, guideBox, startStopButtons);
 
         entryScreenBox.setPadding(new Insets(30, 30, 30, 30));
-        entryScreenBox.setMaxWidth(300);
+        entryScreenBox.setMaxWidth(400);
 
         // <<- CHARTS START ->>
         final NumberAxis xAxisW1 = new NumberAxis();
@@ -199,8 +211,6 @@ public class App extends Application implements IAnimalObserver {
         HBox dataBox = new HBox(lineChartW1, lineChartW2);
         Label map1Title = new Label("World 1. [Folded]");
         Label map2Title = new Label("World 1. [Not folded]");
-        map1Title.setAlignment(Pos.CENTER);
-        map2Title.setAlignment(Pos.CENTER);
         map1Title.setFont(new Font("Helvetica", 26));
         map2Title.setFont(new Font("Helvetica", 26));
         VBox map1Box = new VBox(map1Title, this.mapGrid1);
@@ -209,12 +219,14 @@ public class App extends Application implements IAnimalObserver {
         mapBox.setAlignment(Pos.CENTER);
         dataBox.setAlignment(Pos.CENTER);
         startStopButtons.setAlignment(Pos.CENTER);
+        startStopButtons.setPadding(new Insets(15,15,15,15));
         VBox simulationScreenBox = new VBox(mapBox, dataBox, startStopButtons);
         simulationScreenBox.setVisible(false);
 
         VBox appBox = new VBox(entryScreenBox, simulationScreenBox);
         appBox.setAlignment(Pos.CENTER);
         Scene scene = new Scene(appBox, 1200, 900);
+        primaryStage.getIcons().add(new Image(new FileInputStream("src/main/resources/animal.png")));
         primaryStage.setScene(scene);
         primaryStage.show();
 
