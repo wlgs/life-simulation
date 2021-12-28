@@ -4,6 +4,7 @@ import agh.ics.oop.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,6 +19,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 
 import java.io.FileInputStream;
@@ -242,7 +244,7 @@ public class App extends Application implements IAnimalObserver {
 
         HBox dataBox = new HBox(lineChartW1, lineChartW2);
         Label map1Title = new Label("World 1. [Folded]");
-        Label map2Title = new Label("World 1. [Not folded]");
+        Label map2Title = new Label("World 1. [Regular]");
         map1Title.setFont(new Font("Helvetica", 26));
         map2Title.setFont(new Font("Helvetica", 26));
         VBox map1Box = new VBox(map1Title, this.mapGrid1);
@@ -332,6 +334,14 @@ public class App extends Application implements IAnimalObserver {
             } catch (IOException ex) {
                 System.out.println("Could not export the chart data. -> " + ex);
                 alertFail.show();
+            }
+        });
+
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent t) {
+                Platform.exit();
+                System.exit(0);
             }
         });
     }
