@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Animal extends AbstractWorldMapElement {
     private MapDirection direction = MapDirection.NORTHWEST;
-    private IWorldMap map;
+    private GrassField map;
     private int energy;
     private final int moveEnergy;
     private final int startEnergy;
@@ -14,7 +14,7 @@ public class Animal extends AbstractWorldMapElement {
 
     public Animal(IWorldMap map, Vector2d initialPosition) {
         super(initialPosition);
-        this.map = map;
+        this.map = (GrassField) map;
         this.energy = 30;
         this.startEnergy = 30;
         this.moveEnergy = 2;
@@ -24,7 +24,7 @@ public class Animal extends AbstractWorldMapElement {
 
     public Animal(IWorldMap map, Vector2d initialPosition, int startEnergy) {
         super(initialPosition);
-        this.map = map;
+        this.map = (GrassField) map;
         this.energy = startEnergy;
         this.startEnergy = startEnergy;
         this.moveEnergy = 2;
@@ -34,7 +34,7 @@ public class Animal extends AbstractWorldMapElement {
 
     public Animal(IWorldMap map, Vector2d initialPosition, int startEnergy, int moveEnergy) {
         super(initialPosition);
-        this.map = map;
+        this.map = (GrassField) map;
         this.energy = startEnergy;
         this.startEnergy = startEnergy;
         this.moveEnergy = moveEnergy;
@@ -56,7 +56,7 @@ public class Animal extends AbstractWorldMapElement {
 
     public Animal(IWorldMap map, Vector2d initialPosition, int startEnergy, int moveEnergy, Animal parent1, Animal parent2) {
         super(initialPosition);
-        this.map = map;
+        this.map = (GrassField) map;
         this.energy = startEnergy;
         this.startEnergy = startEnergy;
         this.moveEnergy = moveEnergy;
@@ -96,8 +96,22 @@ public class Animal extends AbstractWorldMapElement {
         if (randomMove == 4)
             movementChange = movementChange.opposite();
         Vector2d newPos = this.position.add(movementChange);
-        if (map.canMoveTo(newPos))
-            positionChanged(newPos);
+        if (this.map.canMoveTo(newPos))
+            if(!this.map.isMapFoldable())
+                positionChanged(newPos);
+            else{
+                if(this.map.isOutOfMap(newPos)){
+                    if (newPos.x > this.map.getDrawUpperRight().x)
+                        newPos.x = this.map.getDrawLowerLeft().x;
+                    else if (newPos.x < this.map.getDrawLowerLeft().x)
+                        newPos.x = this.map.getDrawUpperRight().x;
+                    if (newPos.y > this.map.getDrawUpperRight().y)
+                        newPos.y = this.map.getDrawLowerLeft().y;
+                    else if (newPos.y < this.map.getDrawLowerLeft().y)
+                        newPos.y = this.map.getDrawUpperRight().y;
+                    positionChanged(newPos);
+                }
+            }
 
 
     }

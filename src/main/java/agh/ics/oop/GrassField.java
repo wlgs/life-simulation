@@ -20,10 +20,11 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
     private int totalGrassOutsideJungle = 0;
     private Random r = new Random();
 
-    public final boolean foldable = false;
+    private final boolean foldable;
 
 
     public GrassField(int amount) {
+        this.foldable = false;
         this.mapBorderBL = new Vector2d(0, 0);
         this.mapBorderTR = new Vector2d(10, 10);
         this.mapHeight = 11;
@@ -42,7 +43,8 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
         }
     }
 
-    public GrassField(int mapWidth, int mapHeight, int plantEnergy, float jungleRatio) {
+    public GrassField(int mapWidth, int mapHeight, int plantEnergy, float jungleRatio, boolean foldable) {
+        this.foldable = foldable;
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
         this.maxSpawnRange = (int) Math.sqrt(2 * 10);
@@ -194,7 +196,17 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
     }
 
     public boolean canMoveTo(Vector2d position) {
+        if (foldable)
+            return true;
         return position.precedes(this.mapBorderBL) && position.follows(this.mapBorderTR);
+    }
+
+    public boolean isOutOfMap(Vector2d position){
+        return position.follows(this.mapBorderBL) || position.precedes(this.mapBorderBL);
+    }
+
+    public boolean isMapFoldable(){
+        return this.foldable;
     }
 
     public boolean place(Animal animal) {

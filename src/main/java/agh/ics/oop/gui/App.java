@@ -194,7 +194,8 @@ public class App extends Application implements IAnimalObserver {
                     Integer.parseInt(mapWidthTf.getText()),
                     Integer.parseInt(mapHeightTf.getText()),
                     Integer.parseInt(plantEnergyTf.getText()),
-                    Float.parseFloat(jungleRatioTf.getText()));
+                    Float.parseFloat(jungleRatioTf.getText()),
+                    true);
             this.engine = new SimulationEngine(
                     Integer.parseInt(animalsAmountTf.getText()),
                     Integer.parseInt(startEnergyTf.getText()),
