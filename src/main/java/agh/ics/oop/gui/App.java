@@ -22,6 +22,8 @@ import javafx.stage.Stage;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class App extends Application implements IAnimalObserver {
@@ -33,6 +35,7 @@ public class App extends Application implements IAnimalObserver {
     private SimulationEngine engine2;
     private GrassField map1;
     private GrassField map2;
+    private ExportData exportData = new ExportData();
     private int eraCount = 0;
 
     private XYChart.Series animalsChartSeriesW1 = new XYChart.Series();
@@ -40,12 +43,15 @@ public class App extends Application implements IAnimalObserver {
     private XYChart.Series avgEnergyChartSeriesW1 = new XYChart.Series();
     private XYChart.Series avgKidsChartSeriesW1 = new XYChart.Series();
     private XYChart.Series avgLifeSpanChartSeriesW1 = new XYChart.Series();
+    private ArrayList<XYChart.Series> chartSeriesArrW1;
+
 
     private XYChart.Series animalsChartSeriesW2 = new XYChart.Series();
     private XYChart.Series plantsChartSeriesW2 = new XYChart.Series();
     private XYChart.Series avgEnergyChartSeriesW2 = new XYChart.Series();
     private XYChart.Series avgKidsChartSeriesW2 = new XYChart.Series();
     private XYChart.Series avgLifeSpanChartSeriesW2 = new XYChart.Series();
+    private ArrayList<XYChart.Series> chartSeriesArrW2;
 
     public void init() {
     }
@@ -98,9 +104,13 @@ public class App extends Application implements IAnimalObserver {
 
         Button startButton = new Button("Start");
         Button stopButton = new Button("Stop");
+        Button exportDataButton = new Button("Export current chart data");
+        exportDataButton.setDisable(true);
 
-        startButton.setPadding(new Insets(20, 30, 20, 30));
-        stopButton.setPadding(new Insets(20, 30, 20, 30));
+        Insets btnPadding = new Insets(20,30,20,30);
+        startButton.setPadding(btnPadding);
+        stopButton.setPadding(btnPadding);
+        exportDataButton.setPadding(btnPadding);
 
         // <<- INPUT AND LABELS START ->>
         TextField mapWidthTf = new TextField("25");
@@ -145,8 +155,8 @@ public class App extends Application implements IAnimalObserver {
         var8.setAlignment(Pos.BASELINE_RIGHT);
         CheckBox magicFoldedCb = new CheckBox("Can magic happen on folded map?");
         CheckBox magicNotFoldedCb = new CheckBox("Can magic happen on regular map?");
-        magicFoldedCb.setPadding(new Insets(10,0,10,0));
-        magicNotFoldedCb.setPadding(new Insets(10,0,10,0));
+        magicFoldedCb.setPadding(new Insets(10, 0, 10, 0));
+        magicNotFoldedCb.setPadding(new Insets(10, 0, 10, 0));
         VBox inputBox = new VBox(info1, var1, var2, var3, var4, var5, var6, var7, var8, magicFoldedCb, magicNotFoldedCb, setParamsButton);
         inputBox.setAlignment(Pos.BASELINE_RIGHT);
         // <<- INPUT AND LABELS END ->>
@@ -156,14 +166,14 @@ public class App extends Application implements IAnimalObserver {
         Label guideInfo2 = new Label("2. Animals turn blue when they are about to die.");
         Label guideInfo3 = new Label("3. Animals can reproduce if they are strong enough.");
         Label guideInfo4 = new Label("4. Reproduced animals act similarly to his parents.");
-        Label guideInfo5 = new Label("5. Magic is cloning 5 animals, when there are 5 animals left.");
+        Label guideInfo5 = new Label("5. Magic = clone 5 animals, when there are 5 animals left.");
         Label guideInfo6 = new Label("6. Magic can only happen 3 times.");
-        Label guideInfo7 = new Label("7. Be respectful about your machine possibilities when setting up parameters.");
+        Label guideInfo7 = new Label("7. Be respectful about your machine possibilities.");
 
-        VBox guideBox = new VBox(guideTitle,guideInfo1,guideInfo2,guideInfo3,guideInfo4,guideInfo5,guideInfo6, guideInfo7);
+        VBox guideBox = new VBox(guideTitle, guideInfo1, guideInfo2, guideInfo3, guideInfo4, guideInfo5, guideInfo6, guideInfo7);
+        guideBox.setPadding(btnPadding);
 
-
-        HBox startStopButtons = new HBox(startButton, stopButton);
+        HBox startStopButtons = new HBox(startButton, stopButton, exportDataButton);
         VBox entryScreenBox = new VBox(title, inputBox, guideBox, startStopButtons);
 
         entryScreenBox.setPadding(new Insets(30, 30, 30, 30));
@@ -188,6 +198,17 @@ public class App extends Application implements IAnimalObserver {
         lineChartW1.getData().add(this.avgKidsChartSeriesW1);
         lineChartW1.getData().add(this.avgLifeSpanChartSeriesW1);
 
+        this.chartSeriesArrW1 = new ArrayList<XYChart.Series>() {
+            {
+                add(animalsChartSeriesW1);
+                add(plantsChartSeriesW1);
+                add(avgEnergyChartSeriesW1);
+                add(avgKidsChartSeriesW1);
+                add(avgLifeSpanChartSeriesW1);
+            }
+        };
+
+
         final NumberAxis xAxisW2 = new NumberAxis();
         final NumberAxis yAxisW2 = new NumberAxis();
 
@@ -205,6 +226,17 @@ public class App extends Application implements IAnimalObserver {
         lineChartW2.getData().add(this.avgEnergyChartSeriesW2);
         lineChartW2.getData().add(this.avgKidsChartSeriesW2);
         lineChartW2.getData().add(this.avgLifeSpanChartSeriesW2);
+
+        this.chartSeriesArrW2 = new ArrayList<XYChart.Series>() {
+            {
+                add(animalsChartSeriesW2);
+                add(plantsChartSeriesW2);
+                add(avgEnergyChartSeriesW2);
+                add(avgKidsChartSeriesW2);
+                add(avgLifeSpanChartSeriesW2);
+            }
+        };
+
         // <<- CHARTS END ->>
 
 
@@ -219,14 +251,15 @@ public class App extends Application implements IAnimalObserver {
         mapBox.setAlignment(Pos.CENTER);
         dataBox.setAlignment(Pos.CENTER);
         startStopButtons.setAlignment(Pos.CENTER);
-        startStopButtons.setPadding(new Insets(15,15,15,15));
+        startStopButtons.setPadding(new Insets(15, 15, 15, 15));
         VBox simulationScreenBox = new VBox(mapBox, dataBox, startStopButtons);
         simulationScreenBox.setVisible(false);
 
         VBox appBox = new VBox(entryScreenBox, simulationScreenBox);
         appBox.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(appBox, 1200, 900);
+        Scene scene = new Scene(appBox, 1300, 1000);
         primaryStage.getIcons().add(new Image(new FileInputStream("src/main/resources/animal.png")));
+        primaryStage.setTitle("Life simulation");
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -234,6 +267,7 @@ public class App extends Application implements IAnimalObserver {
         startButton.setOnAction(ev -> {
             this.engine1.startEngine();
             this.engine2.startEngine();
+            exportDataButton.setDisable(true);
         });
 
         setParamsButton.setOnAction(ev -> {
@@ -267,7 +301,6 @@ public class App extends Application implements IAnimalObserver {
             this.engine2.addObserver(this);
 
 
-
             drawMap(false, map1, this.mapGrid1);
             drawMap(false, map2, this.mapGrid2);
 
@@ -276,8 +309,6 @@ public class App extends Application implements IAnimalObserver {
             Thread engine2Thread = new Thread(simThreads, this.engine2);
             engine1Thread.start();
             engine2Thread.start();
-            primaryStage.setWidth(1200);
-            primaryStage.setHeight(900);
             entryScreenBox.setVisible(false);
             entryScreenBox.setManaged(false);
             simulationScreenBox.setVisible(true);
@@ -286,6 +317,22 @@ public class App extends Application implements IAnimalObserver {
         stopButton.setOnAction(ev -> {
             this.engine1.stopEngine();
             this.engine2.stopEngine();
+            exportDataButton.setDisable(false);
+        });
+
+        exportDataButton.setOnAction(ev -> {
+            Alert alertSuccess = new Alert(Alert.AlertType.INFORMATION, "Successfully exported data to dataWorld1.csv and dataWorld2.csv");
+            alertSuccess.setTitle("Success!");
+            Alert alertFail = new Alert(Alert.AlertType.INFORMATION, "Could not export the chart data. Check console for error log.");
+            alertFail.setTitle("Failure!");
+            try {
+                this.exportData.exportDataFromChartSeries(this.chartSeriesArrW1, "dataWorld1.csv");
+                this.exportData.exportDataFromChartSeries(this.chartSeriesArrW2, "dataWorld2.csv");
+                alertSuccess.show();
+            } catch (IOException ex) {
+                System.out.println("Could not export the chart data. -> " + ex);
+                alertFail.show();
+            }
         });
     }
 
@@ -311,11 +358,10 @@ public class App extends Application implements IAnimalObserver {
             this.avgEnergyChartSeriesW2.getData().add(new XYChart.Data(this.eraCount, this.engine2.getAvgEnergy()));
             this.avgKidsChartSeriesW2.getData().add(new XYChart.Data(this.eraCount, this.engine2.getAvgChildrenAmount()));
             this.avgLifeSpanChartSeriesW2.getData().add(new XYChart.Data(this.eraCount, this.engine2.getAvgLifeSpan()));
-
         });
     }
 
-    public void magicHappened(boolean folded){
+    public void magicHappened(boolean folded) {
         Platform.runLater(() -> {
             System.out.println("magic has happened");
             Alert alertFolded = new Alert(Alert.AlertType.INFORMATION, "Magic has happened on left map [folded]!");
