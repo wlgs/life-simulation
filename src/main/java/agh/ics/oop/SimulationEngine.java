@@ -244,7 +244,7 @@ public class SimulationEngine implements IEngine, Runnable {
     public void run() {
         while (true) {
             try {
-                Thread.sleep(250);
+                Thread.sleep(300);
             } catch (InterruptedException ex) {
                 System.out.println("Interrupted -> " + ex);
             }

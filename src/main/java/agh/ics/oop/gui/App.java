@@ -186,8 +186,8 @@ public class App extends Application implements IAnimalObserver {
         lineChartW2.getData().add(this.avgLifeSpanChartSeriesW2);
 
         HBox dataBox = new HBox(lineChartW1, lineChartW2);
-        Label map1Title = new Label("World 1. [Not foldable]");
-        Label map2Title = new Label("World 1. [Foldable]");
+        Label map1Title = new Label("World 1. [Folded]");
+        Label map2Title = new Label("World 1. [Not folded]");
         map1Title.setFont(new Font("Helvetica", 26));
         map2Title.setFont(new Font("Helvetica", 26));
         VBox map1Box = new VBox(map1Title, this.mapGrid1);
@@ -214,13 +214,13 @@ public class App extends Application implements IAnimalObserver {
                     Integer.parseInt(mapHeightTf.getText()),
                     Integer.parseInt(plantEnergyTf.getText()),
                     Float.parseFloat(jungleRatioTf.getText()),
-                    false);
+                    true);
             this.map2 = new GrassField(
                     Integer.parseInt(mapWidthTf.getText()),
                     Integer.parseInt(mapHeightTf.getText()),
                     Integer.parseInt(plantEnergyTf.getText()),
                     Float.parseFloat(jungleRatioTf.getText()),
-                    true);
+                    false);
             this.engine1 = new SimulationEngine(
                     Integer.parseInt(animalsAmountTf.getText()),
                     Integer.parseInt(startEnergyTf.getText()),
