@@ -18,12 +18,15 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
     private final int mapHeight;
     private int totalGrassInJungle = 0;
     private int totalGrassOutsideJungle = 0;
+    private int magicLeft = 3;
     private Random r = new Random();
 
     private final boolean foldable;
+    private final boolean magicable;
 
 
     public GrassField(int amount) {
+        this.magicable = false;
         this.foldable = false;
         this.mapBorderBL = new Vector2d(0, 0);
         this.mapBorderTR = new Vector2d(10, 10);
@@ -43,7 +46,8 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
         }
     }
 
-    public GrassField(int mapWidth, int mapHeight, int plantEnergy, float jungleRatio, boolean foldable) {
+    public GrassField(int mapWidth, int mapHeight, int plantEnergy, float jungleRatio, boolean foldable, boolean magicable) {
+        this.magicable = magicable;
         this.foldable = foldable;
         this.mapWidth = mapWidth;
         this.mapHeight = mapHeight;
@@ -210,6 +214,14 @@ public class GrassField implements IWorldMap, IPositionChangeObserver {
 
     public boolean isMapFoldable(){
         return this.foldable;
+    }
+
+    public boolean canMagicHappen(){
+        return this.magicable && this.magicLeft>0;
+    }
+
+    public void magicHappened(){
+        this.magicLeft-=1;
     }
 
     public boolean place(Animal animal) {

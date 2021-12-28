@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Gene {
 
-    private final int[] genomeArray = new int[32];
+    private int[] genomeArray = new int[32];
 
 
     public int getRotationMove() {
@@ -28,6 +28,10 @@ public class Gene {
         for (int i = 0; i < 32; i++)
             this.genomeArray[i] = r.nextInt(8);
         Arrays.sort(this.genomeArray);
+    }
+
+    public Gene(int[] genomeArray) {
+        this.genomeArray = genomeArray;
     }
 
     public Gene(Animal a1, Animal a2) {

@@ -11,14 +11,10 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
@@ -145,25 +141,35 @@ public class App extends Application implements IAnimalObserver {
         var6.setAlignment(Pos.BASELINE_RIGHT);
         var7.setAlignment(Pos.BASELINE_RIGHT);
         var8.setAlignment(Pos.BASELINE_RIGHT);
-        // <<- INPUT AND LABELS END ->>
-        VBox inputBox = new VBox(info1, var1, var2, var3, var4, var5, var6, var7, var8, setParamsButton);
+        CheckBox magicFoldedCb = new CheckBox("Can magic happen on folded map?");
+        CheckBox magicNotFoldedCb = new CheckBox("Can magic happen on regular map?");
+        magicFoldedCb.setPadding(new Insets(10,0,10,0));
+        magicNotFoldedCb.setPadding(new Insets(10,0,10,0));
+        VBox inputBox = new VBox(info1, var1, var2, var3, var4, var5, var6, var7, var8, magicFoldedCb, magicNotFoldedCb, setParamsButton);
         inputBox.setAlignment(Pos.BASELINE_RIGHT);
+        // <<- INPUT AND LABELS END ->>
+
+
+
         HBox startStopButtons = new HBox(startButton, stopButton);
         VBox entryScreenBox = new VBox(title, inputBox, startStopButtons);
 
         entryScreenBox.setPadding(new Insets(30, 30, 30, 30));
         entryScreenBox.setMaxWidth(300);
 
-
+        // <<- CHARTS START ->>
         final NumberAxis xAxisW1 = new NumberAxis();
         final NumberAxis yAxisW1 = new NumberAxis();
+
         final LineChart<Number, Number> lineChartW1 = new LineChart<>(xAxisW1, yAxisW1);
         lineChartW1.setTitle("World 1. Statistics");
+
         this.animalsChartSeriesW1.setName("Total animals");
         this.plantsChartSeriesW1.setName("Total plants");
         this.avgEnergyChartSeriesW1.setName("AVG Energy");
         this.avgKidsChartSeriesW1.setName("AVG Children of Alive Animals");
         this.avgLifeSpanChartSeriesW1.setName("AVG Lifespan of Dead Animals");
+
         lineChartW1.getData().add(this.animalsChartSeriesW1);
         lineChartW1.getData().add(this.plantsChartSeriesW1);
         lineChartW1.getData().add(this.avgEnergyChartSeriesW1);
@@ -172,18 +178,23 @@ public class App extends Application implements IAnimalObserver {
 
         final NumberAxis xAxisW2 = new NumberAxis();
         final NumberAxis yAxisW2 = new NumberAxis();
+
         final LineChart<Number, Number> lineChartW2 = new LineChart<>(xAxisW2, yAxisW2);
         lineChartW2.setTitle("World 2. Statistics");
+
         this.animalsChartSeriesW2.setName("Total animals");
         this.plantsChartSeriesW2.setName("Total plants");
         this.avgEnergyChartSeriesW2.setName("AVG Energy");
         this.avgKidsChartSeriesW2.setName("AVG Children of Alive Animals");
         this.avgLifeSpanChartSeriesW2.setName("AVG Lifespan of Dead Animals");
+
         lineChartW2.getData().add(this.animalsChartSeriesW2);
         lineChartW2.getData().add(this.plantsChartSeriesW2);
         lineChartW2.getData().add(this.avgEnergyChartSeriesW2);
         lineChartW2.getData().add(this.avgKidsChartSeriesW2);
         lineChartW2.getData().add(this.avgLifeSpanChartSeriesW2);
+        // <<- CHARTS END ->>
+
 
         HBox dataBox = new HBox(lineChartW1, lineChartW2);
         Label map1Title = new Label("World 1. [Folded]");
@@ -214,13 +225,15 @@ public class App extends Application implements IAnimalObserver {
                     Integer.parseInt(mapHeightTf.getText()),
                     Integer.parseInt(plantEnergyTf.getText()),
                     Float.parseFloat(jungleRatioTf.getText()),
-                    true);
+                    true,
+                    magicFoldedCb.isSelected());
             this.map2 = new GrassField(
                     Integer.parseInt(mapWidthTf.getText()),
                     Integer.parseInt(mapHeightTf.getText()),
                     Integer.parseInt(plantEnergyTf.getText()),
                     Float.parseFloat(jungleRatioTf.getText()),
-                    false);
+                    false,
+                    magicNotFoldedCb.isSelected());
             this.engine1 = new SimulationEngine(
                     Integer.parseInt(animalsAmountTf.getText()),
                     Integer.parseInt(startEnergyTf.getText()),
@@ -281,6 +294,19 @@ public class App extends Application implements IAnimalObserver {
             this.avgEnergyChartSeriesW2.getData().add(new XYChart.Data(this.eraCount, this.engine2.getAvgEnergy()));
             this.avgKidsChartSeriesW2.getData().add(new XYChart.Data(this.eraCount, this.engine2.getAvgChildrenAmount()));
             this.avgLifeSpanChartSeriesW2.getData().add(new XYChart.Data(this.eraCount, this.engine2.getAvgLifeSpan()));
+
+        });
+    }
+
+    public void magicHappened(boolean folded){
+        Platform.runLater(() -> {
+            System.out.println("magic has happened");
+            Alert alertFolded = new Alert(Alert.AlertType.INFORMATION, "Magic has happened on left map [folded]!");
+            Alert alertNotFolded = new Alert(Alert.AlertType.INFORMATION, "Magic has happened on right map [not folded]!");
+            if (folded)
+                alertFolded.show();
+            else
+                alertNotFolded.show();
 
         });
     }

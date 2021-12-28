@@ -1,9 +1,6 @@
 package agh.ics.oop;
 
-import agh.ics.oop.gui.App;
 import agh.ics.oop.gui.IAnimalObserver;
-
-import java.sql.Array;
 import java.util.*;
 
 public class SimulationEngine implements IEngine, Runnable {
@@ -11,6 +8,7 @@ public class SimulationEngine implements IEngine, Runnable {
     private List<Animal> deadAnimals = new ArrayList<>();
     private List<IAnimalObserver> observers = new ArrayList<IAnimalObserver>();
     Comparator<Animal> animalComp = new AnimalsComparator();
+    private final Random r = new Random();
     private int moveDelay = 300;
     public boolean running = false;
     private GrassField map;
@@ -41,9 +39,9 @@ public class SimulationEngine implements IEngine, Runnable {
         this.animals = new ArrayList<>();
         this.map = map;
         for (int i = 1; i <= animalsAmount; i++) {
-            Random r = new Random();
-            int randomX = r.nextInt(map.getDrawUpperRight().x);
-            int randomY = r.nextInt(map.getDrawUpperRight().y);
+
+            int randomX = this.r.nextInt(map.getDrawUpperRight().x);
+            int randomY = this.r.nextInt(map.getDrawUpperRight().y);
             Animal animalToAdd = new Animal(map, new Vector2d(randomX, randomY), startEnergy, moveEnergy);
             if (map.place(animalToAdd))
                 animals.add(animalToAdd);
@@ -198,6 +196,13 @@ public class SimulationEngine implements IEngine, Runnable {
         reproduceAnimals();
         spawnGrass();
         countLifeSpan();
+        if (doMagicIfNecessary()){
+            for (IAnimalObserver observer : observers)
+                observer.magicHappened(this.map.isMapFoldable());
+            this.map.magicHappened();
+        }
+
+
     }
 
     public void startEngine() {
@@ -239,6 +244,26 @@ public class SimulationEngine implements IEngine, Runnable {
             return 0;
     }
 
+    public boolean doMagicIfNecessary(){
+        if (this.map.canMagicHappen() && countAnimals()==5){
+            List<Animal> newAnimals = new ArrayList<>();
+
+            for(Animal a : this.animals){
+                int randomX = this.r.nextInt(map.getDrawUpperRight().x);
+                int randomY = this.r.nextInt(map.getDrawUpperRight().y);
+
+                Animal clonedAnimal = new Animal(this.map, new Vector2d(randomX,randomY),a.getStartEnergy(),a.getMoveEnergy(),a);
+                newAnimals.add(clonedAnimal);
+            }
+            for (Animal na : newAnimals) {
+                map.place(na);
+                animals.add(na);
+            }
+            return true;
+        }
+        return false;
+
+    }
 
     @Override
     public void run() {

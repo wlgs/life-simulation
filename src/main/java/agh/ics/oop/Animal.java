@@ -77,6 +77,27 @@ public class Animal extends AbstractWorldMapElement {
         this.genome = new Gene(parent1, parent2);
     }
 
+    public Animal(IWorldMap map, Vector2d initialPosition, int startEnergy, int moveEnergy, Animal copyAnimal) {
+        super(initialPosition);
+        this.map = (GrassField) map;
+        this.energy = startEnergy;
+        this.startEnergy = startEnergy;
+        this.moveEnergy = moveEnergy;
+        MapDirection[] directions = {
+                MapDirection.NORTH,
+                MapDirection.NORTHEAST,
+                MapDirection.EAST,
+                MapDirection.SOUTHEAST,
+                MapDirection.SOUTH,
+                MapDirection.SOUTHWEST,
+                MapDirection.WEST,
+                MapDirection.NORTHWEST};
+        Random r = new Random();
+        this.direction = directions[r.nextInt(8)];
+        this.observers = new ArrayList<>();
+        this.genome = new Gene(copyAnimal.getAnimalGene().getGenomeArray());
+    }
+
 
     public MapDirection getDirection() {
         return this.direction;
