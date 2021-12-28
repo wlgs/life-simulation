@@ -11,7 +11,7 @@ public class ExportData {
 
     public void exportDataFromChartSeries(ArrayList<XYChart.Series<Number, Number>> chartSeriesArr, String filename)
             throws IOException {
-        FileWriter fileWriter = new FileWriter(filename);
+        FileWriter fileWriter = new FileWriter("src/main/resources/chart_data" + filename);
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print("era,animalsAmount,plantsAmount,avgEnergy,avgChildren,avgLifeSpan\r\n");
 
